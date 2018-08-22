@@ -4,5 +4,29 @@ Steam link Bluetooth controller. Support for keyboard mouse and gamepad
 ## Introduction
 The objective of this project is to create a support keyboard, mouse and gamepad to help with steamk link user interaction. The app is to be developed to android in a first initial release and the communication is featured via bluetooth. No need to buy additional mouse, keyboard or second gamepad. No need to always move the peripherals arround. The bluetooth data transfer was choosen because the steam link supports bluetooth. Given that, in some conditions useres might not have wireless connection due to distance reasons. However, bluetooth will always be close to the players becuase a proper close quarters interactions is needed with steam link.
 
+## Proof of conecpt
+In order to test if this project could be developed it required different proto-testing phases. These phases are:
+
+- Test virtual user input via uinput module in ubuntu
+- Test virtual user input via uinput module in steamlink
+- Test bluetooth data transfer via ubunutu (C server) and ubuntu (C client)
+- Test bluetooth data transfer via steamlink (C server) and ubuntu (C client)
+- Test bluetooth data transfer via steamlink (C server) and android (Android client)
+
+Each phase was successful proving that the Application can be planned, designed and developed.
+
+## Setup 
+The project setup and compilation proved to be quite the challenge. Multiple modules needed to be configured in order to be possible to compile the multiple prototypes used during the proof of concept phase. 
+
+First of all the steamlink is differnt from common PC/laptop. While a common computer uses the `x86_64` architecture, Steam Link uses a `ARMv7` architecture. More detailed a `ARMv7a` architecture. Additional packages or development tools might need to be downloaded and installed manually under an architecture code `armhf`. I uses a Linux firmware called `3.8.13-mrvl` based on the `3.8` version. In order to compile, the gnu C library `2.19` is used. This library has a different folder structure from the current release. Given that, some headers in C code might need to be updated accordingly.
+
+To compile a simple C program we need an `armv7a` compiler. Fortunatly, Valve provides the tools needed for that. Clone the Github, Steam Link SDK, link in references, `cd steamlin-sdk && source setenv.sh` and we have the compiler binaries exported for the current terminal. Now, instead of `gcc` we just need to use `armv7a-cros-linux-gnueabi-gcc`. The glibc folder used by the compiler is located under `steamlink-sdk/toolchain/usr/armv7a-cros-linux-gnuebi/usr/include`. If there is a need to use other headers in the future, they should be stored in that folder. It is the case of the bluez module. But we will talk about that later.
+
+
+
 ## Steam link used to test information
 - Bluetooth Adapter address: E0:31:9E:07:07:66
+
+## References
+- Linux Kernel, uinput module: https://www.kernel.org/doc/html/v4.16/input/uinput.html
+- Github, Steamlink SDK: https://github.com/ValveSoftware/steamlink-sdk
