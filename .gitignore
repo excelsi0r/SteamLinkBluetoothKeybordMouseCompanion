@@ -1,3 +1,5 @@
 main
 steamlink-sdk-master
 steamlink-sdk-master.zip
+*.o
+*.swp
