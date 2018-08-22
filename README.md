@@ -22,7 +22,7 @@ First of all the steamlink is differnt from common PC/laptop. While a common com
 
 To compile a simple C program we need an `armv7a` compiler. Fortunatly, Valve provides the tools needed for that. Clone the Github, Steam Link SDK, link in references, `cd steamlin-sdk && source setenv.sh` and we have the compiler binaries exported for the current terminal. Now, instead of `gcc` we just need to use `armv7a-cros-linux-gnueabi-gcc`. The glibc folder used by the compiler is located under `steamlink-sdk/toolchain/usr/armv7a-cros-linux-gnuebi/usr/include`. If there is a need to use other headers in the future, they should be stored in that folder. It is the case of the bluez module. But we will talk about that later.
 
-
+There is no need to compile the C program has a kernel module. However, I will describe how to recompile the kernel which might be needed in the future if someone wishes to replace the Steam Link device current module. This explanation is also featured in the Steam Link SDK Repository. Firstly, extract binaries, `cd steamlin-sdk && source setenv.sh`, this will be needed because the kernel must be compiled for the arm architecture. So when running `make` in the following steps, the armv7a compiler will be used. Second, `export ARCH=arm; export LOCALVERSION="-mrvl"`. Third, `make bg2cd_penguin_mlc_defconfig`. Fourth, `make menuconfig`, the terminal will enter in a configuration graphical interface, you dont need to change anything just save and exit. Fifth, 
 
 ## Steam link used to test information
 - Bluetooth Adapter address: E0:31:9E:07:07:66
