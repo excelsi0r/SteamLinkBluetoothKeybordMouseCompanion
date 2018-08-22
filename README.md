@@ -24,6 +24,9 @@ To compile a simple C program we need an `armv7a` compiler. Fortunatly, Valve pr
 
 There is no need to compile the C program has a kernel module. However, I will describe how to recompile the kernel which might be needed in the future if someone wishes to replace the Steam Link device current module. This explanation is also featured in the Steam Link SDK Repository. Firstly, extract binaries, `cd steamlin-sdk && source setenv.sh`, this will be needed because the kernel must be compiled for the arm architecture. So when running `make` in the following steps, the armv7a compiler will be used. Second, `export ARCH=arm; export LOCALVERSION="-mrvl"`. Third, `make bg2cd_penguin_mlc_defconfig`. Fourth, `make menuconfig`, the terminal will enter in a configuration graphical interface, you dont need to change anything just save and exit. Fifth, create a empty `Makefile` in all of the following folders (create them if they don't exist): `./kernel/arch/arm/mach-berlin/modules/wlan_sd8787`, `./kernel/arch/arm/mach-berlin/modules/wlan_sd8797`, `./kernel/arch/arm/mach-berlin/modules/wlan_sd8801` and `./kernel/arch/arm/mach-berlin/modules/wlan_sd8897`. These files need to exist because they are missing and the build fails if there are no files there. You might need to install other tools to help build the kernel, `sudo apt-get install git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc`. Sixth and last, hit `make` and wait until the build is successful.
 
+//TODO talk about bluetooth
+//TODO talk about android
+
 ## Steam link used to test information
 - Bluetooth Adapter address: E0:31:9E:07:07:66
 
