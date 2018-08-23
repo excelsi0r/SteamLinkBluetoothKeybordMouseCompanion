@@ -30,10 +30,11 @@ For bluetooth development we are going to use the offical Linux BlueZ library fo
 
 Unfortunatly, in order to transfer data between steamlink C server and Android java client we need to configure a SDP (Service Discovery Protocol) in steamlink. The C code is simple to write, however BlueZ no longer supports SDP by default. So, in order to make it work we need to configure steamlink to run BlueZ in compatibility mode. For that, inside steamlink terminal, we will lock for the file `/etc/init.d/bluetooth.sh`, open the file in vi, and change the line `/usr/libexec/bluetooth/bluetoothd -E -n $DEBUG_OPTIONS` to `/usr/libexec/bluetooth/bluetoothd -E --compat -n $DEBUG_OPTIONS`. You might need some experience in order to use vi. Once you save and exit the steamlink should restart by itself, if not then power cycle the device. Once de device is up, hop into the terminal again and execute `chmod 777 /var/run/sdp`. This will change the file permissions in order to register the sdp. This setup is necessary because if you tried to register the sdp in your C application you would get `segmetation fault (core dumped)` in the `sdp_record_register()` line.
 
-//TODO talk about bluetooth
-//TODO talk about android
+When Android 4.2 came out, the Bluetooth stack was completely revamped. The casual methods to create a RFCOMM connection no longer work and workarrounds are needed. So instead of calling a simple `createRfcommSocketToServiceRecord()` call we need to create a fallback socket using: `btSocket =(BluetoothSocket) btDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(btDevice,channel);` where `btSocket` represent a BluetoothSocket class, `btDevice` represents the device we want to connect with and `channel` represents the channel which the SDP protocol is running. This channel needs to be same number also registered in the C program server in steamlink. Do not mistake socket descriptor for channel. Socket descriptor is arbitrarily choosen, while the rfcomm sdp channel is not. I found that using the channel `11` works very well to register the sdp. In the description there is a link explaining the problem with the change of the Bluetooth stack in Android.
 
-## Steam link used to test information
+In order for steamlink and android exchange data via bluetooth, they need to be paired. It is a requirement of steamlink to only exchange data between know devices. Steamlink provides some tools that can help pair the yout device. 
+
+## Steam link MAC used to test information
 - Bluetooth Adapter address: E0:31:9E:07:07:66
 
 ## References
@@ -50,3 +51,4 @@ Unfortunatly, in order to transfer data between steamlink C server and Android j
 - Bluetooth SDP in C: https://people.csail.mit.edu/albert/bluez-intro/x604.html
 - Vi tutorial: https://www.tutorialspoint.com/unix/unix-vi-editor.htm
 - Bluetooth Android Overview: https://developer.android.com/guide/topics/connectivity/bluetooth
+- Bluetooth Android stack workarround: https://stackoverflow.com/questions/18657427/ioexception-read-failed-socket-might-closed-bluetooth-on-android-4-3
