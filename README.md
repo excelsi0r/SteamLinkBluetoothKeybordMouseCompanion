@@ -52,3 +52,6 @@ In order for steamlink and android exchange data via bluetooth, they need to be 
 - Vi tutorial: https://www.tutorialspoint.com/unix/unix-vi-editor.htm
 - Bluetooth Android Overview: https://developer.android.com/guide/topics/connectivity/bluetooth
 - Bluetooth Android stack workarround: https://stackoverflow.com/questions/18657427/ioexception-read-failed-socket-might-closed-bluetooth-on-android-4-3
+- Linux Make Bluetooth Discoverable: https://gist.github.com/lexruee/7591755e7d8015f9f8b4
+- Bluetoothctl pairing: https://stackoverflow.com/questions/34709583/bluetoothctl-set-passkey
+- Bluetooth Bluez pairigin: https://docs.ubuntu.com/core/en/stacks/bluetooth/bluez/docs/reference/pairing/outbound
