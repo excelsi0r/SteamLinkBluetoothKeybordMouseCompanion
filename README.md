@@ -32,7 +32,33 @@ Unfortunatly, in order to transfer data between steamlink C server and Android j
 
 When Android 4.2 came out, the Bluetooth stack was completely revamped. The casual methods to create a RFCOMM connection no longer work and workarrounds are needed. So instead of calling a simple `createRfcommSocketToServiceRecord()` call we need to create a fallback socket using: `btSocket =(BluetoothSocket) btDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(btDevice,channel);` where `btSocket` represent a BluetoothSocket class, `btDevice` represents the device we want to connect with and `channel` represents the channel which the SDP protocol is running. This channel needs to be same number also registered in the C program server in steamlink. Do not mistake socket descriptor for channel. Socket descriptor is arbitrarily choosen, while the rfcomm sdp channel is not. I found that using the channel `11` works very well to register the sdp. In the description there is a link explaining the problem with the change of the Bluetooth stack in Android.
 
-In order for steamlink and android exchange data via bluetooth, they need to be paired. It is a requirement of steamlink to only exchange data between know devices. Steamlink provides some tools that can help pair the yout device. 
+In order for steamlink and android exchange data via bluetooth, they need to be paired. It is a requirement of steamlink to only exchange data between know devices. Steamlink provides some tools that can help pair the yout device. First, hop into steamlink terminal and make it discoverable: 
+```
+sudo hciconfig hci0 up
+sudo hciconfig hci0 reset
+sudo hciconfig hci0 piscan
+sudo hciconfig hci0 leadv
+```
+Then make a simple scan in order to discover the MAC address of your Android device:
+```
+hcitool scan
+```
+Once you have your device MAC address, then initiate the pariring phase. Inside `bluetoothctl`:
+```
+$bluetoothctl
+[bluetooth]# power on
+Changing power on succeeded
+[bluetooth]# discoverable on
+Changing discoverable on succeeded
+[bluetooth]# pairable on
+Changing pairable on succeeded
+[bluetooth]# agent NoInputNoOutput
+Agent registered
+[bluetooth]# default-agent 
+Default agent request successful
+[bluetooth]# pair XX:XX:XX:XX:XX:XX
+```
+Follow additional instructions in your Android device or SteamLink Terminal and that should do it. Your device and steamlink are now paired. You can now properly initialize RFCOMM sockets and exchange data between both.
 
 ## Steam link MAC used to test information
 - Bluetooth Adapter address: E0:31:9E:07:07:66
