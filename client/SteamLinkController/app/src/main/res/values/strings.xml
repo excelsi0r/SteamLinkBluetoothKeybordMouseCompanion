@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SteamLinkController</string>
+    <string name="connectButton">Connect</string>
+    <string name="editButton">Edit</string>
+    <string name="exitButton">Exit</string>
+    <string name="pairedDevicesText">Paired Devices</string>
+    <string name="scanDevicesText">Other Devices Available</string>
+    <string name="scanDevicesButton">Scan</string>
+    <string name="yourMACviewText">This is your device MAC address:</string>
+</resources>
