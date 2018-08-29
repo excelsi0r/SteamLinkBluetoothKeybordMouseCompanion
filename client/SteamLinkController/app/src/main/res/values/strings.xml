@@ -6,5 +6,8 @@
     <string name="pairedDevicesText">Paired Devices</string>
     <string name="scanDevicesText">Other Devices Available</string>
     <string name="scanDevicesButton">Scan</string>
+    <string name="cancelDevicesButton">Cancel</string>
+    <string name="selectDevice">Select Device to Connect</string>
     <string name="yourMACviewText">This is your device MAC address:</string>
+
 </resources>

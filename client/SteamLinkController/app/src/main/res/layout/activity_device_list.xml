@@ -8,14 +8,23 @@
     tools:context=".DeviceListActivity">
 
     <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/selectDevice"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+
+    <TextView
         android:id="@+id/pairedDevicesText"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:text="@string/pairedDevicesText"
         android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:background="@android:color/darker_gray"/>
+        android:textSize="20sp" />
 
     <ListView
         android:id="@+id/pairedDevicesList"
@@ -23,23 +32,35 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/scanDevicesText"
+        android:id="@+id/availableDevicesText"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:text="@string/scanDevicesText"
         android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:background="@android:color/darker_gray"/>
+        android:textSize="20sp" />
 
     <ListView
-        android:id="@+id/scanDevicesList"
+        android:id="@+id/availableDeviceList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/scanDevicesButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50sp"
         android:text="@string/scanDevicesButton" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/cancelDevicesButton"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:text="@string/cancelDevicesButton" />
 </LinearLayout>

@@ -109,7 +109,19 @@ public class MainActivity extends AppCompatActivity
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        if(requestCode == REQUEST_ENABLE_BT)
+        {
 
+        }
+        else if(requestCode == REQUEST_DEVICE_LIST)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                Log.d("BLUETOOTHTASK", address);
+
+            }
+        }
     }
 
     public void print(final String str)

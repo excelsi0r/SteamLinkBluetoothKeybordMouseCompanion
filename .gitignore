@@ -1,10 +1,8 @@
-main
 steamlink-sdk-master
 steamlink-sdk-master.zip
 *.o
 *.swp
 *.iml
-
 client/SteamLinkController/.gradle
 client/SteamLinkController/local.properties
 client/SteamLinkController/.idea/libraries
