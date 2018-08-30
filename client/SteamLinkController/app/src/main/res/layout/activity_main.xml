@@ -42,12 +42,6 @@
         android:textAlignment="center" />
 
     <Button
-        android:id="@+id/editButton"
-        android:layout_width="277dp"
-        android:layout_height="80dp"
-        android:text="@string/editButton" />
-
-    <Button
         android:id="@+id/exitButton"
         android:layout_width="277dp"
         android:layout_height="80dp"

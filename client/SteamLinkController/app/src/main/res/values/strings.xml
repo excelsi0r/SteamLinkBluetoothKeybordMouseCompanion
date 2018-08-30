@@ -9,5 +9,10 @@
     <string name="cancelDevicesButton">Cancel</string>
     <string name="selectDevice">Select Device to Connect</string>
     <string name="yourMACviewText">This is your device MAC address:</string>
-
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="autoConnectTitle">Auto-Connect</string>
+    <string name="autoConnectDescription">Connecting to saved device in: </string>
+    <string name="savedDeviceNotAvailable">Saved device is not available</string>
+    <string name="cannotSave">Cannot save device</string>
 </resources>

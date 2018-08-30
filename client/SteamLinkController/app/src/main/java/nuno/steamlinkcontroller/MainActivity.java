@@ -1,17 +1,16 @@
 package nuno.steamlinkcontroller;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.ParcelUuid;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -20,25 +19,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
 {
     Button connectButton;
-    Button editButton;
     Button exitButton;
     TextView myMacView;
-
+    BluetoothAdapter mBtAdapter;
 
     final int REQUEST_ENABLE_BT = 1;
     final int REQUEST_DEVICE_LIST = 2;
+    final static String SAVED_DEVICE =  "SteamLinkDevice";
     private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private final String UbuntuServerAddress = "A0:88:69:70:80:9F";
     private final String XUbuntuServerAddress = "00:19:0E:00:9E:C1";
@@ -50,52 +47,33 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         connectButton = findViewById(R.id.connectButton);
-        editButton = findViewById(R.id.editButton);
         exitButton = findViewById(R.id.exitButton);
         myMacView = findViewById(R.id.myMACviewText);
 
+        //Checking Bluetooth Supported
         SpannableString content = null;
-
-        if(BluetoothAdapter.getDefaultAdapter() == null)
+        if((mBtAdapter = BluetoothAdapter.getDefaultAdapter()) == null)
+        {
+            connectButton.setClickable(false);
             content = new SpannableString("Not Supported");
+        }
         else
             content = new SpannableString(android.provider.Settings.Secure.getString(getContentResolver(), "bluetooth_address"));
-
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         myMacView.setText(content);
 
+        //set click listeners
         connectButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
-
-                Gson gson = new Gson();
-                String json = mPrefs.getString("SteamLinkDevice", null);
-
-                if(json == null)
-                {
-                    Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
-                    startActivityForResult(serverIntent, REQUEST_DEVICE_LIST);
-                }
-                else
-                {
-                    BluetoothDevice btDevice = gson.fromJson(json, BluetoothDevice.class);
-                    //connect with retrieved device
-                }
+                Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
+                startActivityForResult(serverIntent, REQUEST_DEVICE_LIST);
             }
         });
 
-        editButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-            }
-        });
 
         exitButton.setOnClickListener(new View.OnClickListener()
         {
@@ -105,21 +83,69 @@ public class MainActivity extends AppCompatActivity
                 finish();
             }
         });
+
+        //Retrieve saved device to initiate auto-connect
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        String address = mPrefs.getString(MainActivity.SAVED_DEVICE, null);
+        if(address != null)
+        {
+            BluetoothDevice device = mBtAdapter.getRemoteDevice(address);
+
+            //Verify if the device is available and possible to save and connect
+            if(verifyDeviceAvailability(device))
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(R.string.autoConnectDescription).setTitle(R.string.autoConnectTitle);
+
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //TODO initialize connection
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, null);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+
+                new CountDownTimer(5300, 500) {
+                    public void onTick(long millisUntilFinished) {
+                        dialog.setMessage(getString(R.string.autoConnectDescription) + " " + millisUntilFinished / 1000);
+                    }
+
+                    public void onFinish() {
+                        dialog.cancel();
+                    }
+                }.start();
+            }
+            else
+            {
+                //In case device is not available
+                Toast.makeText(this, getString(R.string.savedDeviceNotAvailable), Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if(requestCode == REQUEST_ENABLE_BT)
-        {
-
-        }
-        else if(requestCode == REQUEST_DEVICE_LIST)
+        if(requestCode == REQUEST_DEVICE_LIST)
         {
             if(resultCode == RESULT_OK)
             {
                 String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                Log.d("BLUETOOTHTASK", address);
+                BluetoothDevice btDevice = mBtAdapter.getRemoteDevice(address);
 
+                //Verify if the device is available and possible to save and connect
+                if(verifyDeviceAvailability(btDevice))
+                {
+                    SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+                    mPrefs.edit().putString(MainActivity.SAVED_DEVICE, address).apply();
+
+                    //TODO initialize connection
+                }
+                else
+                {
+                    Toast.makeText(this, getString(R.string.cannotSave), Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -181,19 +207,7 @@ public class MainActivity extends AppCompatActivity
             print("Server Device Created\n");
 
             /*
-            String temp = "";
-            for (ParcelUuid uuid : btDevice.getUuids())
-            {
-                temp += uuid.toString() + "\n";
-            }
 
-            Log.d("BLUETOOTHPAIRED", "===============================\n"
-                    + btDevice.getName() + "\n"
-                    + btDevice.getAddress() + "\n"
-                    + btDevice.getBluetoothClass().toString() + "\n"
-                    + Integer.toString(btDevice.getBondState()) + "\n"
-                    + Integer.toString(btDevice.getType()) + "\n"
-                    + temp + "\n");
 
 */
 
@@ -288,5 +302,20 @@ public class MainActivity extends AppCompatActivity
     private Activity getActivity()
     {
         return this;
+    }
+
+    private void logDevice(BluetoothDevice btDevice)
+    {
+        Log.d("BLUETOOTHDEVICE", "===============================\n");
+        Log.d("BLUETOOTHDEVICE",btDevice.getName() + "\n");
+        Log.d("BLUETOOTHDEVICE",btDevice.getAddress() + "\n");
+        Log.d("BLUETOOTHDEVICE",btDevice.getBluetoothClass().toString() + "\n");
+        Log.d("BLUETOOTHDEVICE",Integer.toString(btDevice.getBondState()) + "\n");
+        Log.d("BLUETOOTHDEVICE",Integer.toString(btDevice.getType()) + "\n");
+    }
+
+    private boolean verifyDeviceAvailability(BluetoothDevice device)
+    {
+        return device.getAddress() != null || device.getClass() != null;
     }
 }
