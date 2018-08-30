@@ -316,6 +316,6 @@ public class MainActivity extends AppCompatActivity
 
     private boolean verifyDeviceAvailability(BluetoothDevice device)
     {
-        return device.getAddress() != null || device.getClass() != null;
+        return device.getAddress() != null && device.getClass() != null;
     }
 }
