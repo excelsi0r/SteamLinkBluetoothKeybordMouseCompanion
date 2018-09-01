@@ -15,4 +15,6 @@
     <string name="autoConnectDescription">Connecting to saved device in: </string>
     <string name="savedDeviceNotAvailable">Saved device is not available</string>
     <string name="cannotSave">Cannot save device</string>
+    <string name="connectingText">Attempting to connect...</string>
+    <string name="failedToConnect">Failed to connect</string>
 </resources>
