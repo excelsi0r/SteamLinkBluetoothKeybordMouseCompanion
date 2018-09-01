@@ -47,7 +47,7 @@ public class KeyboardMouseActivity extends AppCompatActivity
         connection.execute(btDevice);
     }
 
-    private class AttemptConnection extends AsyncTask<BluetoothDevice, Void, BluetoothSocket>
+    private class AttemptConnection extends AsyncTask<BluetoothDevice, Integer, BluetoothSocket>
     {
         boolean timeout = false;
         AlertDialog dialog;
@@ -112,6 +112,7 @@ public class KeyboardMouseActivity extends AppCompatActivity
 
         }
 
+
         @Override
         protected BluetoothSocket doInBackground(BluetoothDevice... btDeviceArray)
         {
@@ -130,7 +131,7 @@ public class KeyboardMouseActivity extends AppCompatActivity
             countDownTimer.start();
 
             //continue only if bluetoothadapter is enabled && if timeout hasn't ended
-            while (!mBtAdapter.isEnabled() || !timeout){}
+            while (!mBtAdapter.isEnabled() && !timeout){}
 
             //final check if timeout occurred
             if(!mBtAdapter.isEnabled())
