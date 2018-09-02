@@ -78,6 +78,7 @@ Follow additional instructions in your Android device or SteamLink Terminal and 
 - Vi tutorial: https://www.tutorialspoint.com/unix/unix-vi-editor.htm
 - Bluetooth Android Overview: https://developer.android.com/guide/topics/connectivity/bluetooth
 - Bluetooth Android stack workarround: https://stackoverflow.com/questions/18657427/ioexception-read-failed-socket-might-closed-bluetooth-on-android-4-3
+- Bluetooth Android, not finding devices: https://stackoverflow.com/questions/36163751/android-marshmallow-6-0-1-bluetooth-scan-returning-no-results
 - Linux Make Bluetooth Discoverable: https://gist.github.com/lexruee/7591755e7d8015f9f8b4
 - Bluetoothctl pairing: https://stackoverflow.com/questions/34709583/bluetoothctl-set-passkey
 - Bluetooth Bluez pairigin: https://docs.ubuntu.com/core/en/stacks/bluetooth/bluez/docs/reference/pairing/outbound
