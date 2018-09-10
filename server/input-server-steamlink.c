@@ -5,11 +5,12 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <signal.h>
 
 /**
  * For Linux Kernel version: 3.8.13-mrvl
  */
-
+volatile sig_atomic_t stop;
 
 /* emit function is identical to of the first example */
 void emit(int fd, int type, int code, int val)
@@ -26,6 +27,10 @@ void emit(int fd, int type, int code, int val)
    write(fd, &ie, sizeof(ie));
 }
 
+
+void inthand(int signum) {
+    stop = 1;
+}
 
 int main(void)
 {

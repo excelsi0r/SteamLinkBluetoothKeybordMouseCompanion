@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
 #include <bluetooth/sdp.h>
 #include <bluetooth/sdp_lib.h>
+#include <signal.h>
 
+volatile sig_atomic_t stop;
+
+void inthand(int signum) {
+    stop = 1;
+}
 
 sdp_session_t *register_service(uint8_t rfcomm_channel)
 {
@@ -94,7 +101,7 @@ int main(int argc, char **argv)
 	struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
 	char buf[1024] = { 0 };
 	int port = 11;
-	int s, client, bytes_read, result;
+	int s, client, bytes_read, result, pid;
 	socklen_t opt = sizeof(rem_addr);
 
 	// local bluetooth adapter
@@ -117,9 +124,19 @@ int main(int argc, char **argv)
 	result = listen(s, 1);
 	printf("listen() returned %d\n", result);
 
-	// accept one connection
+	// accept multiple connections
 	printf("Waiting for client to accept...\n"); fflush(stdout);
-	client = accept(s, (struct sockaddr *)&rem_addr, &opt);
+	signal(SIGINT, inthand);
+	while(!stop)
+	{
+		client = accept(s, (struct sockaddr *)&rem_addr, &opt);
+		pid = fork();
+		if(pid == 0)
+		{
+		    //child
+		    break;
+        }
+	}
 	printf("Client accepted code: %i\n",s); fflush(stdout);
 
 	ba2str( &rem_addr.rc_bdaddr, buf );
@@ -127,9 +144,26 @@ int main(int argc, char **argv)
 	memset(buf, 0, sizeof(buf));
 
 	// read data from the client
-	bytes_read = read(client, buf, sizeof(buf));
-	if( bytes_read > 0 ) {
-	  printf("Received [%s]\n", buf);
+	while(!stop)
+	{
+	    //Constant read from child
+	    bytes_read = read(client, buf, sizeof(buf));
+	    
+	    //TODO create struct event
+	    event = parse(bytes_read);
+	    
+	    if(event.valid && event.mouse_ev)
+	    {
+	        //write event
+	        emit(fd, EV_REL, REL_X, event.mouse_x);
+            emit(fd, EV_REL, REL_Y, event.mouse_y);
+            emit(fd, EV_SYN, SYN_REPORT, 0);
+	    }
+	    
+	    
+	    if( bytes_read > 0 ) {
+	      printf("Received [%s]\n", buf);
+	    }
 	}
 
 	// close connection and session
