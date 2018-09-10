@@ -159,7 +159,11 @@ int main(int argc, char **argv)
             emit(fd, EV_REL, REL_Y, event.mouse_y);
             emit(fd, EV_SYN, SYN_REPORT, 0);
 	    }
-	    
+	    else if(event.valid && event.key_ev)
+	    {
+            emit(fd, EV_KEY, event.key, event.key_action);
+            emit(fd, EV_SYN, SYN_REPORT, 0);    
+	    }
 	    
 	    if( bytes_read > 0 ) {
 	      printf("Received [%s]\n", buf);
