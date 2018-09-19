@@ -2,17 +2,42 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <stdlib.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
 #include <bluetooth/sdp.h>
 #include <bluetooth/sdp_lib.h>
 #include <signal.h>
+#include <linux/uinput.h>
+#include <fcntl.h>
+
+#include "headers.h"
 
 volatile sig_atomic_t stop;
 
 void inthand(int signum) {
     stop = 1;
 }
+
+void parse(char buf[], Event * event)
+{
+    //TODO make parse fuction
+}
+
+void emit(int fd, int type, int code, int val)
+{
+   struct input_event ie;
+
+   ie.type = type;
+   ie.code = code;
+   ie.value = val;
+   /* timestamp values below are ignored */
+   ie.time.tv_sec = 0;
+   ie.time.tv_usec = 0;
+
+   write(fd, &ie, sizeof(ie));
+}
+
 
 sdp_session_t *register_service(uint8_t rfcomm_channel)
 {
@@ -137,11 +162,19 @@ int main(int argc, char **argv)
 		    break;
         }
 	}
+
+    //Client Part, initialize uinput module
 	printf("Client accepted code: %i\n",s); fflush(stdout);
+
+    int fd = open("/dev/uinput", O_WRONLY | O_NONBLOCK);
+    printf("Uinput opening code: %i\n", fd);
+    fflush(stdout);
 
 	ba2str( &rem_addr.rc_bdaddr, buf );
 	fprintf(stderr, "Accepted connection from %s\n", buf); fflush(stderr);
 	memset(buf, 0, sizeof(buf));
+
+    Event * event = malloc(sizeof(Event));
 
 	// read data from the client
 	while(!stop)
@@ -149,19 +182,18 @@ int main(int argc, char **argv)
 	    //Constant read from child
 	    bytes_read = read(client, buf, sizeof(buf));
 	    
-	    //TODO create struct event
-	    event = parse(bytes_read);
+	    parse(buf, event);
 	    
-	    if(event.valid && event.mouse_ev)
+	    if(event->valid && event->mouse_ev)
 	    {
 	        //write event
-	        emit(fd, EV_REL, REL_X, event.mouse_x);
-            emit(fd, EV_REL, REL_Y, event.mouse_y);
+	        emit(fd, EV_REL, REL_X, event->mouse_x);
+            emit(fd, EV_REL, REL_Y, event->mouse_y);
             emit(fd, EV_SYN, SYN_REPORT, 0);
 	    }
-	    else if(event.valid && event.key_ev)
+	    else if(event->valid && event->key_ev)
 	    {
-            emit(fd, EV_KEY, event.key, event.key_action);
+            emit(fd, EV_KEY, event->key, event->key_action);
             emit(fd, EV_SYN, SYN_REPORT, 0);    
 	    }
 	    
@@ -171,6 +203,7 @@ int main(int argc, char **argv)
 	}
 
 	// close connection and session
+    free(event);
 	close(client);
 	close(s);
 	sdp_close(session);
