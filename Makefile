@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -lbluetooth
+CFLAGS= -Wall -lbluetooth
 DEPS=
 
 ROOT=./server/
