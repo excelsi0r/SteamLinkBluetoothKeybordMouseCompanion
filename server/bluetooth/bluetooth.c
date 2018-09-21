@@ -12,9 +12,9 @@ int init_bluetooth(Bluetooth_config * bt_config)
 	loc_addr.rc_channel = (uint8_t) PORT;
 
     // initialize session
-	sdp_session_t* session = register_service(PORT);
+	bt_config->session = register_service(PORT);
     printf("SDP registered!\n"); fflush(stdout);
-    if(session == NULL)
+    if(bt_config->session == NULL)
         return 1;
 
     //allocate socket
@@ -37,6 +37,13 @@ int init_bluetooth(Bluetooth_config * bt_config)
 
 
     return 0;
+}
+
+int close_bluetooth(Bluetooth_config * bt_config)
+{
+	close(bt_config->socket);
+	sdp_close(bt_config->session);
+	return 0;
 }
 
 sdp_session_t *register_service(uint8_t rfcomm_channel)

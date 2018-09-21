@@ -6,13 +6,15 @@ ROOT=./server/
 BLDIR=$(ROOT)bluetooth/
 INDIR=$(ROOT)input/
 PTDIR=$(ROOT)protocol/
+SGDIR=$(ROOT)signal/
 
 ROOTOBJS=$(ROOT)server.c
 BLOBJS=$(BLDIR)bluetooth.c $(BLDIR)bluetooth_service.c
 INOBJS=$(INDIR)input.c $(INDIR)input_service.c
 PTOBJS=$(PTDIR)protocol.c
+SGOBJS=$(SGDIR)signal.c
 
-OBJS=$(ROOTOBJS) $(BLOBJS) $(INOBJS) $(PTOBJS)
+OBJS=$(ROOTOBJS) $(BLOBJS) $(INOBJS) $(PTOBJS) $(SGOBJS)
 
 BIN=server.o
 
