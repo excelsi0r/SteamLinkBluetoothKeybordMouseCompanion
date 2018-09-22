@@ -21,7 +21,7 @@ int init_bluetooth(Bluetooth_config * bt_config)
     bt_config->socket = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
 	printf("Allocated socket code: %i\n",bt_config->socket); fflush(stdout);
     if(bt_config->socket == -1)
-        return 1;
+		return 1;
 
     // bind socket to port 11 of the first available 
 	result = bind(bt_config->socket, (struct sockaddr *)&loc_addr, sizeof(loc_addr));
@@ -34,7 +34,12 @@ int init_bluetooth(Bluetooth_config * bt_config)
 	printf("listen() returned %d\n", result);
     if(result == -1)
         return 1;
-
+	
+	//set socket for nonblock
+    result = fcntl(bt_config->socket, F_SETFL, O_NONBLOCK);
+	printf("Setting socket for nonblock\n"); fflush(stdout);
+    if(result == -1)
+        return 1;	
 
     return 0;
 }
