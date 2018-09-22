@@ -60,6 +60,8 @@ Default agent request successful
 ```
 Follow additional instructions in your Android device or SteamLink Terminal and that should do it. Your device and steamlink are now paired. You can now properly initialize RFCOMM sockets and exchange data between both.
 
+Additionally, it might be required to change the permissions of "/dev/uinput" depending on which user is attempting to open. Normal users might not be able to open the file, either change permissions to open and edit for the current user or execute as root.
+
 ## Steam link MAC used to test information
 - Bluetooth Adapter address: E0:31:9E:07:07:66
 
