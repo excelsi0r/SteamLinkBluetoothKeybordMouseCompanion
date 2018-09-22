@@ -2,4 +2,4 @@
 
 volatile sig_atomic_t stop;
 
-void inthand(int signum);
+__sighandler_t init_signal();

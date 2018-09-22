@@ -5,7 +5,8 @@
 int main(int argc, char const *argv[])
 {
     //errors
-    int bt_error;
+    int bt_error, in_error;
+    __sighandler_t sg_error;
 
     //config bluetooth
     Bluetooth_config * bt_config = malloc(sizeof(Bluetooth_config));
@@ -15,24 +16,30 @@ int main(int argc, char const *argv[])
         printf("Failed to configure Bluetooth module: %d\n", bt_error);
         return -1;
     }
-    
+
     //TODO config input
-    init_input();
-
-    //config signal handling
-    signal(SIGINT, inthand);
-    while(!stop)
+    Input_config * in_config = malloc(sizeof(Input_config));
+    in_error = init_input(in_config);
+    if(in_error == -1)
     {
-
+        printf("Failed to configure Input module: %d\n", in_error);
+        return -1;
     }
 
-    //CYCLES HERE
+    //config signal handling
+    sg_error = init_signal();
+    if(sg_error == SIG_ERR)
+    {
+        printf("Failed to configure Signal module");
+        return -1;
+    }
+    
+    //TODO CYCLES HERE
 
 
     //close bluetooth
     close_bluetooth(bt_config);
+    close_input(in_config);
 
-
-    printf("Exiting...\n");
     return 0;
 }

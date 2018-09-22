@@ -5,3 +5,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <linux/uinput.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <sys/types.h>
