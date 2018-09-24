@@ -1,15 +1,26 @@
+#ifndef PROTOCOL_HEADERS_H
+#define PROTOCOL_HEADERS_H
+
 #include "../common/common.h"
+
+#define KEYB 1
+#define MOUS 2
+#define MHWL 3
 
 typedef struct
 {
     int valid;
     int mouse_ev;
-    int mouse_x;
-    int mouse_y;
+    double mouse_x;
+    double mouse_y;
+	int mousewheel_ev;
+	double mouse_h;
+	double mouse_v;
     int key_ev;
     int key;
     int key_action;
 } Event;
 
-void parse(char buf[], int byte_read, Event * event);
-void emit(int fd, int type, int code, int val);
+void parse(char buf[], Event * event);
+
+#endif

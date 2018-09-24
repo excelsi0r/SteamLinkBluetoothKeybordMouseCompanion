@@ -52,7 +52,6 @@ int main(int argc, char const *argv[])
             if(pid == 0)
             {
                 //child
-                //TODO might need to allocate new integer client
                 break;
             }
         }
@@ -78,7 +77,7 @@ int main(int argc, char const *argv[])
 
             if(bytes_read > 0)
             {
-                parse(buf, bytes_read ,event);
+                parse(buf ,event);
                 
                 if(event->valid && event->mouse_ev)
                 {
@@ -100,7 +99,7 @@ int main(int argc, char const *argv[])
         close(client);
         free(event);
 
-        printf("Closing Client\n");
+        printf("Closing Child\n");
 
         return 0;
     }

@@ -10,5 +10,6 @@ typedef struct
 
 int init_input(Input_config * in_config);
 int close_input(Input_config * in_config);
+void emit(int fd, int type, int code, int val);
 
 #endif
