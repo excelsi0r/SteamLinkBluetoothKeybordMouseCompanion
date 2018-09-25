@@ -2,6 +2,7 @@
 #define INPUT_HEADERS_H
 
 #include "../common/common.h"
+#include "../protocol/protocol_headers.h"
 
 #define INPUT1_KEY_LOWER_BOUND KEY_ESC
 #define INPUT1_KEY_UPPER_BOUND KEY_MICMUTE
@@ -25,5 +26,7 @@ void config_group_key_1(int fd);
 void config_group_btn_2(int fd);
 void config_group_rel_3(int fd);
 void config_virtual_driver(int fd);
+
+void receive_event(char * buf, int client, Event * event, Input_config * in_config);
 
 #endif
