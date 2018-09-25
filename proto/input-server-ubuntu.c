@@ -25,6 +25,8 @@ void emit(int fd, int type, int code, int val)
 }
 
 
+
+
 int main(void)
 {
    printf("Welcome!\n");
@@ -49,11 +51,23 @@ int main(void)
 
 
    /* enable mouse button left and relative events */
-   ioctl(fd, UI_SET_EVBIT, EV_KEY);
-   ioctl(fd, UI_SET_KEYBIT, BTN_LEFT);
+
+
+	int keys = 248;
 
 	ioctl(fd, UI_SET_EVBIT, EV_KEY);
-   ioctl(fd, UI_SET_KEYBIT, KEY_SPACE);
+
+	while(keys--)
+	{
+		printf("%d\n",keys);
+		ioctl(fd, UI_SET_KEYBIT, keys);
+	}
+
+
+	
+
+   //ioctl(fd, UI_SET_EVBIT, EV_KEY);
+   ioctl(fd, UI_SET_KEYBIT, BTN_RIGHT);
 
    ioctl(fd, UI_SET_EVBIT, EV_REL);
    ioctl(fd, UI_SET_RELBIT, REL_X);
@@ -77,6 +91,13 @@ int main(void)
     */
    sleep(1);
 	
+	emit(fd, EV_KEY, BTN_RIGHT, 1);
+   emit(fd, EV_SYN, SYN_REPORT, 0);
+   emit(fd, EV_KEY, BTN_RIGHT, 0);
+   emit(fd, EV_SYN, SYN_REPORT, 0);
+
+	sleep(1);
+	
 
    /* Move the mouse diagonally, 5 units per axis */
    while (i--) {
@@ -92,9 +113,9 @@ int main(void)
     */
    sleep(1);
 
-	emit(fd, EV_KEY, KEY_SPACE, 1);
+	emit(fd, EV_KEY, KEY_Z, 1);
    emit(fd, EV_SYN, SYN_REPORT, 0);
-   emit(fd, EV_KEY, KEY_SPACE, 0);
+   emit(fd, EV_KEY, KEY_Z, 0);
    emit(fd, EV_SYN, SYN_REPORT, 0);
 
    /*

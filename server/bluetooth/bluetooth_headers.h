@@ -17,4 +17,6 @@ int init_bluetooth(Bluetooth_config * bt_config);
 int close_bluetooth(Bluetooth_config * bt_config);
 sdp_session_t *register_service(uint8_t rfcomm_channel);
 
+int accept_client(Bluetooth_config * bt_config);
+
 #endif

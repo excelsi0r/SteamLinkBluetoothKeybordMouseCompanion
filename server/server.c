@@ -43,8 +43,7 @@ int main(int argc, char const *argv[])
     //TODO CYCLES HERE
     while(!stop)
     {
-        client = accept(bt_config->socket, (struct sockaddr *) &bt_config->rem_addr, &bt_config->opt);
-        fcntl(client, F_SETFL, O_NONBLOCK);
+        client = accept_client(bt_config);
 
         if(client > -1)
         {
