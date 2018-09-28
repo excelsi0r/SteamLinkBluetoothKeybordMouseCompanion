@@ -40,6 +40,22 @@ public class MainActivity extends AppCompatActivity
     final int REQUEST_DEVICE_LIST = 2;
 
 
+    /**
+     * Temp
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Intent intent = new Intent(getActivity(), TestMousepadKeyboard.class);
+        startActivity(intent);
+    }
+
+    /*
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -139,6 +155,8 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
+    */
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {

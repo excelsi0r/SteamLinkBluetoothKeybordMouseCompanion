@@ -13,7 +13,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme">
@@ -23,13 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".DeviceListActivity"
             android:theme="@style/DialogTheme" />
         <activity
             android:name=".KeyboardMouseActivity"
-            />
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity android:name=".TestMousepadKeyboard"></activity>
     </application>
 
 </manifest>
