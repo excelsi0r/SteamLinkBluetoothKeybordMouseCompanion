@@ -1,4 +1,4 @@
-package nuno.steamlinkcontroller;
+package nuno.steamlinkcontroller.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -29,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Set;
+
+import nuno.steamlinkcontroller.R;
 
 public class DeviceListActivity extends AppCompatActivity
 {

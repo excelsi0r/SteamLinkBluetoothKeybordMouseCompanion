@@ -1,0 +1,3 @@
+<resources>
+    <integer name="MAX_DELTA">150</integer>
+</resources>

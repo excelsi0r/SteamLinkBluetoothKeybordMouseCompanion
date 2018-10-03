@@ -1,4 +1,4 @@
-package nuno.steamlinkcontroller;
+package nuno.steamlinkcontroller.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,14 +11,14 @@ import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
+
+import nuno.steamlinkcontroller.R;
 
 public class KeyboardMouseActivity extends AppCompatActivity
 {

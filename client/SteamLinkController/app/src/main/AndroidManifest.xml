@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,12 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DeviceListActivity"
+            android:name=".activities.DeviceListActivity"
             android:theme="@style/DialogTheme" />
         <activity
-            android:name=".KeyboardMouseActivity"
+            android:name=".activities.KeyboardMouseActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".TestMousepadKeyboard"></activity>
+        <activity android:name=".activities.TestMousepadKeyboard"></activity>
     </application>
 
 </manifest>

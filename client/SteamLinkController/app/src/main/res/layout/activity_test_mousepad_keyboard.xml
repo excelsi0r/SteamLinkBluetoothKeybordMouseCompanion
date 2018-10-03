@@ -5,30 +5,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".TestMousepadKeyboard">
+    tools:context=".activities.TestMousepadKeyboard">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="195dp"
+        android:layout_height="239dp"
         app:srcCompat="@android:color/darker_gray"
         tools:srcCompat="@android:color/darker_gray" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="128dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/left_mouse"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/mouseUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="▲ " />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="34dp" />
+
+            <Button
+                android:id="@+id/mouseDown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="▼" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/right_mouse"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1" />
     </LinearLayout>
 </LinearLayout>
