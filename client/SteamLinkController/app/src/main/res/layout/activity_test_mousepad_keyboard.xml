@@ -4,32 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical"
     tools:context=".activities.TestMousepadKeyboard">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="239dp"
-        app:srcCompat="@android:color/darker_gray"
-        tools:srcCompat="@android:color/darker_gray" />
+        android:layout_height="0dp"
+        android:layout_weight="7">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@android:color/darker_gray"
+            tools:srcCompat="@android:color/darker_gray" />
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="0dp"
+        android:layout_weight="4"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/left_mouse"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="4" />
 
-        <LinearLayout
-            android:layout_width="6dp"
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_weight="2">
 
             <Button
                 android:id="@+id/mouseUp"
@@ -37,22 +46,57 @@
                 android:layout_height="wrap_content"
                 android:text="▲ " />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="34dp" />
-
             <Button
                 android:id="@+id/mouseDown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
                 android:text="▼" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <Button
             android:id="@+id/right_mouse"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="4" />
+
     </LinearLayout>
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8" />
+
+        <ImageButton
+            android:id="@+id/keyboardButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            app:srcCompat="@drawable/ic_keyboard" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/dummyText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0"
+        android:inputType="textVisiblePassword"
+        android:imeOptions="actionPrevious"
+        android:visibility="visible"/>
+
+
 </LinearLayout>
