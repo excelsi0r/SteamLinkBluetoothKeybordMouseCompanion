@@ -76,7 +76,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/F1"
+            android:id="@+id/f1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

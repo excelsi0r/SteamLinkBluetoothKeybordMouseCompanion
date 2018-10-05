@@ -74,6 +74,31 @@ public class TestMousepadKeyboard extends AppCompatActivity
         final Button downButton = findViewById(R.id.mouseDown);
         final ImageButton keyboardButton = findViewById(R.id.keyboardButton);
         dummyText = findViewById(R.id.dummyText);
+        final Button f1Button = findViewById(R.id.f1);
+        final Button f2Button = findViewById(R.id.f2);
+        final Button f3Button = findViewById(R.id.f3);
+        final Button f4Button = findViewById(R.id.f4);
+        final Button f5Button = findViewById(R.id.f5);
+        final Button f6Button = findViewById(R.id.f6);
+        final Button f7Button = findViewById(R.id.f7);
+        final Button f8Button = findViewById(R.id.f8);
+        final Button f9Button = findViewById(R.id.f9);
+        final Button escButton = findViewById(R.id.escButton);
+        final Button homeButton = findViewById(R.id.homeButton);
+        final Button pgUpButton = findViewById(R.id.pgUpButton);
+        final Button delButton = findViewById(R.id.delButton);
+        final Button tabButton = findViewById(R.id.tabButton);
+        final Button endButton = findViewById(R.id.endButton);
+        final Button pgDownButton = findViewById(R.id.pgDownButton);
+        final Button insButton = findViewById(R.id.insButton);
+        final Button ctrlButton = findViewById(R.id.ctrlButton);
+        final ImageButton winButton = findViewById(R.id.windowsButton);
+        final Button altButton = findViewById(R.id.altButton);
+        final Button shiftButton = findViewById(R.id.shiftButton);
+        final Button arrowUpButton = findViewById(R.id.arrowUp);
+        final Button arrowDownButton = findViewById(R.id.arrowDown);
+        final Button arrowLeftButton = findViewById(R.id.arrowLeft);
+        final Button arrowRightButton = findViewById(R.id.arrowRight);
 
         MAX_DELTA = getResources().getInteger(R.integer.MAX_DELTA);
 
@@ -326,6 +351,284 @@ public class TestMousepadKeyboard extends AppCompatActivity
             }
         });
 
+        f1Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyf1(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyf1(false);
+                return true;
+            }
+        });
+
+        f2Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyf2(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyf2(false);
+                return true;
+            }
+        });
+
+        f3Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyf3(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyf3(false);
+                return true;
+            }
+        });
+
+        f4Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyf4(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyf4(false);
+                return true;
+            }
+        });
+
+        f5Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyf5(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyf5(false);
+                return true;
+            }
+        });
+
+        f6Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyf6(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyf6(false);
+                return true;
+            }
+        });
+
+        f7Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyf7(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyf7(false);
+                return true;
+            }
+        });
+
+        f8Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyf8(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyf8(false);
+                return true;
+            }
+        });
+
+        f9Button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyf9(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyf9(false);
+                return true;
+            }
+        });
+
+        escButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyEsc(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyEsc(false);
+                return true;
+            }
+        });
+
+        pgUpButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyPgUp(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyPgUp(false);
+                return true;
+            }
+        });
+
+        delButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyDel(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyDel(false);
+                return true;
+            }
+        });
+
+        delButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyDel(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyDel(false);
+                return true;
+            }
+        });
+
+        tabButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyTab(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyTab(false);
+                return true;
+            }
+        });
+
+        endButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyEnd(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyEnd(false);
+                return true;
+            }
+        });
+
+        pgDownButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyPgDown(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyPgDown(false);
+                return true;
+            }
+        });
+
+        insButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyIns(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyIns(false);
+                return true;
+            }
+        });
+
+        ctrlButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyCtrl(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyCtrl(false);
+                return true;
+            }
+        });
+
+        winButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyWin(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyWin(false);
+                return true;
+            }
+        });
+
+        altButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyAlt(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyAlt(false);
+                return true;
+            }
+        });
+
+        shiftButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyShift(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyShift(false);
+                return true;
+            }
+        });
+
+        arrowUpButton.setOnTouchListener(new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyArrowUp(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyArrowUp(false);
+                return true;
+            }
+        });
+
+
+        arrowDownButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyArrowDown(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyArrowDown(false);
+                return true;
+            }
+        });
+
+
+        arrowLeftButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyArrowLeft(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyArrowLeft(false);
+                return true;
+            }
+        });
+
+
+        arrowRightButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyArrowRight(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyArrowRight(false);
+                return true;
+            }
+        });
+
 
     }
 
@@ -476,6 +779,257 @@ public class TestMousepadKeyboard extends AppCompatActivity
     {
         //TODO map key to linux integer and send
         Log.d("EVENTCODE", 23 + " '" + key + "'");
+    }
+
+    private void keyf1(boolean down)
+    {
+        if(down) {
+            //TODO send f1 down
+            Log.d("EVENTCODE", 24 + ""); }
+        else {
+            //TODO send f1 up
+            Log.d("EVENTCODE", 25 + ""); }
+    }
+
+    private void keyf2(boolean down)
+    {
+        if(down) {
+            //TODO send f2 down
+            Log.d("EVENTCODE", 26 + ""); }
+        else {
+            //TODO send f2 up
+            Log.d("EVENTCODE", 27 + ""); }
+    }
+
+    private void keyf3(boolean down)
+    {
+        if(down) {
+            //TODO send f3 down
+            Log.d("EVENTCODE", 28 + ""); }
+        else {
+            //TODO send f3 up
+            Log.d("EVENTCODE", 29 + ""); }
+    }
+
+
+    private void keyf4(boolean down)
+    {
+        if(down) {
+            //TODO send f4 down
+            Log.d("EVENTCODE", 30 + ""); }
+        else {
+            //TODO send f4 up
+            Log.d("EVENTCODE", 31 + ""); }
+    }
+
+    private void keyf5(boolean down)
+    {
+        if(down) {
+            //TODO send f5 down
+            Log.d("EVENTCODE", 32 + ""); }
+        else {
+            //TODO send f5 up
+            Log.d("EVENTCODE", 33 + ""); }
+    }
+
+
+    private void keyf6(boolean down)
+    {
+        if(down) {
+            //TODO send f6 down
+            Log.d("EVENTCODE", 34 + ""); }
+        else {
+            //TODO send f6 up
+            Log.d("EVENTCODE", 35 + ""); }
+    }
+
+    private void keyf7(boolean down)
+    {
+        if(down) {
+            //TODO send f7 down
+            Log.d("EVENTCODE", 36 + ""); }
+        else {
+            //TODO send f7 up
+            Log.d("EVENTCODE", 37 + ""); }
+    }
+
+    private void keyf8(boolean down)
+    {
+        if(down) {
+            //TODO send f8 down
+            Log.d("EVENTCODE", 38 + ""); }
+        else {
+            //TODO send f8 up
+            Log.d("EVENTCODE", 39 + ""); }
+    }
+
+    private void keyf9(boolean down)
+    {
+        if(down) {
+            //TODO send f9 down
+            Log.d("EVENTCODE", 40 + ""); }
+        else {
+            //TODO send f9 up
+            Log.d("EVENTCODE", 41 + ""); }
+    }
+
+    private void keyEsc(boolean down)
+    {
+        if(down) {
+            //TODO send esc down
+            Log.d("EVENTCODE", 42 + ""); }
+        else {
+            //TODO send esc up
+            Log.d("EVENTCODE", 43 + ""); }
+    }
+    private void keyHome(boolean down)
+    {
+        if(down) {
+            //TODO send home down
+            Log.d("EVENTCODE", 44 + ""); }
+        else {
+            //TODO send home up
+            Log.d("EVENTCODE", 45 + ""); }
+    }
+
+    private void keyPgUp(boolean down)
+    {
+        if(down) {
+            //TODO send PgUp down
+            Log.d("EVENTCODE", 46 + ""); }
+        else {
+            //TODO send PgUp up
+            Log.d("EVENTCODE", 47 + ""); }
+    }
+
+    private void keyPgDown(boolean down)
+    {
+        if(down) {
+            //TODO send PgDn down
+            Log.d("EVENTCODE", 48 + ""); }
+        else {
+            //TODO send PgDn up
+            Log.d("EVENTCODE", 49 + ""); }
+    }
+
+    private void keyDel(boolean down)
+    {
+        if(down) {
+            //TODO send del down
+            Log.d("EVENTCODE", 50 + ""); }
+        else {
+            //TODO send del up
+            Log.d("EVENTCODE", 51 + ""); }
+    }
+
+    private void keyTab(boolean down)
+    {
+        if(down) {
+            //TODO send tab down
+            Log.d("EVENTCODE", 52 + ""); }
+        else {
+            //TODO send tab up
+            Log.d("EVENTCODE", 53 + ""); }
+    }
+
+    private void keyEnd(boolean down)
+    {
+        if(down) {
+            //TODO send end down
+            Log.d("EVENTCODE", 54 + ""); }
+        else {
+            //TODO send end up
+            Log.d("EVENTCODE", 55 + ""); }
+    }
+
+    private void keyIns(boolean down)
+    {
+        if(down) {
+            //TODO send ins down
+            Log.d("EVENTCODE", 56 + ""); }
+        else {
+            //TODO send ins up
+            Log.d("EVENTCODE", 57 + ""); }
+    }
+
+    private void keyCtrl(boolean down)
+    {
+        if(down) {
+            //TODO send ctrl down
+            Log.d("EVENTCODE", 58 + ""); }
+        else {
+            //TODO send ctrl up
+            Log.d("EVENTCODE", 59 + ""); }
+    }
+
+    private void keyWin(boolean down)
+    {
+        if(down) {
+            //TODO send win down
+            Log.d("EVENTCODE", 60 + ""); }
+        else {
+            //TODO send win up
+            Log.d("EVENTCODE", 61 + ""); }
+    }
+
+    private void keyAlt(boolean down)
+    {
+        if(down) {
+            //TODO send alt down
+            Log.d("EVENTCODE", 62 + ""); }
+        else {
+            //TODO send alt up
+            Log.d("EVENTCODE", 63 + ""); }
+    }
+
+    private void keyShift(boolean down)
+    {
+        if(down) {
+            //TODO send shift down
+            Log.d("EVENTCODE", 64 + ""); }
+        else {
+            //TODO send shift up
+            Log.d("EVENTCODE", 65 + ""); }
+    }
+
+    private void keyArrowUp(boolean down)
+    {
+        if(down) {
+            //TODO send arrowUp down
+            Log.d("EVENTCODE", 66 + ""); }
+        else {
+            //TODO send arrowUp up
+            Log.d("EVENTCODE", 67 + ""); }
+    }
+
+    private void keyArrowDown(boolean down)
+    {
+        if(down) {
+            //TODO send arrowDown down
+            Log.d("EVENTCODE", 68 + ""); }
+        else {
+            //TODO send arrowDown up
+            Log.d("EVENTCODE", 69 + ""); }
+    }
+
+    private void keyArrowLeft(boolean down)
+    {
+        if(down) {
+            //TODO send arrowLeft down
+            Log.d("EVENTCODE", 70 + ""); }
+        else {
+            //TODO send arrowLeft up
+            Log.d("EVENTCODE", 71 + ""); }
+    }
+
+    private void keyArrowRight(boolean down)
+    {
+        if(down) {
+            //TODO send arrowLeft down
+            Log.d("EVENTCODE", 72 + ""); }
+        else {
+            //TODO send arrowLeft up
+            Log.d("EVENTCODE", 73 + ""); }
     }
 
     private void showKeyboard()
