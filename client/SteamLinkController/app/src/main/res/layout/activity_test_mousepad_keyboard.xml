@@ -64,11 +64,211 @@
 
     </LinearLayout>
 
-
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6" />
+        android:layout_weight="0.5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/F1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="F1"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/f2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="F2"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/f3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="f3"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/f4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="f4"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/f5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="f5"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/f6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="f6"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/f7"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="f7"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/f8"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="f8"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/f9"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="f9"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="2">
+
+        <Button
+            android:id="@+id/escButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:text="Esc" />
+
+        <Button
+            android:id="@+id/homeButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="Home"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/pgUpButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="Pg Up"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/delButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="del"
+            android:textSize="12sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
+
+        <Button
+            android:id="@+id/arrowUp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="↑"
+            android:textSize="24sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="2">
+
+        <Button
+            android:id="@+id/tabButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:text="↹"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/endButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="End"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/pgDownButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="Pg Dn"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/insButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="INS"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/arrowRight"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="←"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/arrowDown"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="↓"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/arrowLeft"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="→"
+            android:textSize="24sp" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,16 +276,41 @@
         android:layout_weight="2"
         android:orientation="horizontal">
 
-        <Space
+        <Button
+            android:id="@+id/ctrlButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="8" />
+            android:layout_weight="3"
+            android:text="Ctrl"
+            android:textSize="14sp" />
+
+        <ImageButton
+            android:id="@+id/windowsButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            app:srcCompat="@drawable/ic_windows" />
+
+        <Button
+            android:id="@+id/altButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="Alt" />
+
+        <Button
+            android:id="@+id/shiftButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:text="⇧"
+            android:textSize="30sp" />
 
         <ImageButton
             android:id="@+id/keyboardButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="3"
             app:srcCompat="@drawable/ic_keyboard" />
     </LinearLayout>
 
@@ -97,6 +322,5 @@
         android:inputType="textVisiblePassword"
         android:imeOptions="actionPrevious"
         android:visibility="visible"/>
-
 
 </LinearLayout>
