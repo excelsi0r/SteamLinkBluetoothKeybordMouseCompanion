@@ -25,10 +25,7 @@
         <activity
             android:name=".activities.DeviceListActivity"
             android:theme="@style/DialogTheme" />
-        <activity
-            android:name=".activities.KeyboardMouseActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".activities.TestMousepadKeyboard"></activity>
+        <activity android:name=".activities.MousepadKeyboard"></activity>
     </application>
 
 </manifest>

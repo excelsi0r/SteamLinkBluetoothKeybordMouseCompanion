@@ -2,8 +2,15 @@ package nuno.steamlinkcontroller.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.hardware.input.InputManager;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,17 +18,21 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.OutputStream;
+import java.util.UUID;
 
 import nuno.steamlinkcontroller.R;
 import nuno.steamlinkcontroller.logic.OneFingerFSM;
@@ -29,14 +40,21 @@ import nuno.steamlinkcontroller.logic.OneFingerState;
 import nuno.steamlinkcontroller.logic.TwoFingerFSM;
 import nuno.steamlinkcontroller.logic.TwoFingerState;
 
-import static android.view.KeyEvent.KEYCODE_BACK;
 import static android.view.KeyEvent.KEYCODE_DEL;
 import static android.view.MotionEvent.*;
 
-public class TestMousepadKeyboard extends AppCompatActivity
+public class MousepadKeyboard extends AppCompatActivity
 {
     private int MAX_DELTA;
     private final int DELAY = 10;
+    final int MAX_RETRIES = 3;
+    final int REQUEST_ENABLE_BT = 1;
+    final static int RFCOMM_CHANNEL = 11;
+
+    private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private final String UbuntuServerAddress = "A0:88:69:70:80:9F";
+    private final String XUbuntuServerAddress = "00:19:0E:00:9E:C1";
+    private final String SteamLinkServerAddress = "E0:31:9E:07:07:66";
 
     //one finger mousepad
     private OneFingerFSM oneFingerFSM = new OneFingerFSM();
@@ -52,6 +70,9 @@ public class TestMousepadKeyboard extends AppCompatActivity
 
     //Views for keyboard
     EditText dummyText;
+    LinearLayout keyboardMouse;
+
+    BluetoothAdapter mBtAdapter;
 
     @Override
     protected void onPause()
@@ -65,7 +86,9 @@ public class TestMousepadKeyboard extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_mousepad_keyboard);
+        setContentView(R.layout.activity_mousepad_keyboard);
+
+        keyboardMouse = findViewById(R.id.keyboardMouse);
 
         final ImageView img = findViewById(R.id.imageView);
         final Button leftButton = findViewById(R.id.left_mouse);
@@ -108,7 +131,6 @@ public class TestMousepadKeyboard extends AppCompatActivity
             @Override
             public void run()
             {
-                final long curr = System.currentTimeMillis();
 
                 OneFingerState state = oneFingerFSM.getEventToSend();
                 switch (state)
@@ -629,12 +651,11 @@ public class TestMousepadKeyboard extends AppCompatActivity
             }
         });
 
+        BluetoothDevice btDevice = getIntent().getExtras().getParcelable(MainActivity.BLUETOOTH_DEVICE_EXTRA);
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    }
-
-    public void toast()
-    {
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        MousepadKeyboard.AttemptConnection connection = new MousepadKeyboard.AttemptConnection();
+        connection.execute(btDevice);
     }
 
     /**
@@ -1043,6 +1064,133 @@ public class TestMousepadKeyboard extends AppCompatActivity
 
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(dummyText.getWindowToken(), 0);
+    }
 
+    private class AttemptConnection extends AsyncTask<BluetoothDevice, Integer, BluetoothSocket>
+    {
+        boolean timeout = false;
+        AlertDialog dialog;
+        CountDownTimer countDownTimer;
+
+        @Override
+        protected void onPreExecute()
+        {
+            countDownTimer  = new CountDownTimer(10500, 500)
+            {
+                @Override
+                public void onTick(long l) { }
+
+                @Override
+                public void onFinish() { timeout = true; }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface)
+                {
+                    finish();
+                    cancel(true);
+                }
+            });
+            dialog = builder.create();
+            dialog.setMessage(getString(R.string.connectingText));
+
+
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View content = inflater.inflate(R.layout.activity_connecting, null);
+            dialog.setView(content);
+            dialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(BluetoothSocket bluetoothSocket)
+        {
+            dialog.dismiss();
+
+            if(bluetoothSocket == null)
+            {
+                Toast.makeText(MousepadKeyboard.this, getString(R.string.failedToConnect), Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            else
+            {
+                keyboardMouse.setVisibility(View.VISIBLE);
+                //TODO for testing purposes send hello
+                try
+                {
+                    OutputStream outputStream = bluetoothSocket.getOutputStream();
+                    outputStream.write("hello".getBytes());
+                    outputStream.flush();
+                    bluetoothSocket.close();
+                    finish();
+                }
+                catch (Exception e) { }
+
+                //TODO get output stream and set listeners
+            }
+
+        }
+
+
+        @Override
+        protected BluetoothSocket doInBackground(BluetoothDevice... btDeviceArray)
+        {
+            //socket to return
+            BluetoothSocket btSocket = null;
+            BluetoothDevice device = btDeviceArray[0];
+
+            //attempt to enable bluetooth... again
+            if (!mBtAdapter.isEnabled())
+            {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
+
+            //wait until adapter is connected, 10 second timeout
+            countDownTimer.start();
+
+            //continue only if bluetoothadapter is enabled && if timeout hasn't ended
+            while (!mBtAdapter.isEnabled() && !timeout){}
+
+            //final check if timeout occurred
+            if(!mBtAdapter.isEnabled())
+                return null;
+
+            boolean connected = false;
+            int retries = 0;
+
+            //attempting to connect to failSafe socket
+            while (retries <= MAX_RETRIES && !connected)
+            {
+                try
+                {
+                    btSocket = (BluetoothSocket) device.getClass().getMethod("createRfcommSocket", new Class[]{int.class}).invoke(device, MousepadKeyboard.RFCOMM_CHANNEL);
+                    btSocket.connect();
+                    connected = true;
+
+                }
+                catch (Exception n)
+                {
+                    connected = false;
+                    retries++;
+                }
+            }
+
+            if(!connected)
+                return null;
+            else
+                return btSocket;
+        }
+    }
+
+    private Activity getActivity()
+    {
+        return this;
+    }
+
+    public void toast()
+    {
+        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,12 +1,18 @@
 package nuno.steamlinkcontroller.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,22 +32,6 @@ public class MainActivity extends AppCompatActivity
     final int REQUEST_ENABLE_BT = 1;
     final int REQUEST_DEVICE_LIST = 2;
 
-
-    /**
-     * Temp
-     * @param savedInstanceState
-     */
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        Intent intent = new Intent(getActivity(), TestMousepadKeyboard.class);
-        startActivity(intent);
-    }
-
-    /*
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -143,8 +133,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    */
-
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if(requestCode == REQUEST_DEVICE_LIST)
@@ -172,7 +160,7 @@ public class MainActivity extends AppCompatActivity
 
     private void connect(BluetoothDevice device)
     {
-        Intent intent = new Intent(getActivity(), KeyboardMouseActivity.class);
+        Intent intent = new Intent(getActivity(), MousepadKeyboard.class);
         intent.putExtra(BLUETOOTH_DEVICE_EXTRA, device);
         startActivity(intent);
     }
