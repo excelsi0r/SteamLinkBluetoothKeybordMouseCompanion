@@ -91,11 +91,12 @@ int main(void)
     */
    sleep(1);
 	
+/*
 	emit(fd, EV_KEY, BTN_RIGHT, 1);
    emit(fd, EV_SYN, SYN_REPORT, 0);
    emit(fd, EV_KEY, BTN_RIGHT, 0);
    emit(fd, EV_SYN, SYN_REPORT, 0);
-
+*/
 	sleep(1);
 	
 
@@ -113,9 +114,9 @@ int main(void)
     */
    sleep(1);
 
-	emit(fd, EV_KEY, KEY_Z, 1);
+	emit(fd, EV_KEY, KEY_KPPLUS, 1);
    emit(fd, EV_SYN, SYN_REPORT, 0);
-   emit(fd, EV_KEY, KEY_Z, 0);
+   emit(fd, EV_KEY, KEY_KPPLUS, 0);
    emit(fd, EV_SYN, SYN_REPORT, 0);
 
    /*

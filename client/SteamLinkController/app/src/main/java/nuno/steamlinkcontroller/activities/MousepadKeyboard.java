@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -45,11 +46,13 @@ import static android.view.MotionEvent.*;
 
 public class MousepadKeyboard extends AppCompatActivity
 {
-    private int MAX_DELTA;
     private final int DELAY = 10;
-    final int MAX_RETRIES = 3;
-    final int REQUEST_ENABLE_BT = 1;
-    final static int RFCOMM_CHANNEL = 11;
+    private final int MAX_RETRIES = 3;
+    private final int REQUEST_ENABLE_BT = 1;
+    private final static int RFCOMM_CHANNEL = 11;
+    private int KEYB;
+    private int MOUS;
+    private int MWHL;
 
     private final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private final String UbuntuServerAddress = "A0:88:69:70:80:9F";
@@ -73,12 +76,26 @@ public class MousepadKeyboard extends AppCompatActivity
     LinearLayout keyboardMouse;
 
     BluetoothAdapter mBtAdapter;
+    BluetoothSocket btSocket = null;
+    OutputStream btOutputStream = null;
+    Resources res = null;
 
     @Override
     protected void onPause()
     {
         hideKeyboard();
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        try { btOutputStream.close(); } catch (Exception e) {}
+        try { btSocket.close(); } catch (Exception e) {}
+
+        finish();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -123,7 +140,12 @@ public class MousepadKeyboard extends AppCompatActivity
         final Button arrowLeftButton = findViewById(R.id.arrowLeft);
         final Button arrowRightButton = findViewById(R.id.arrowRight);
 
-        MAX_DELTA = getResources().getInteger(R.integer.MAX_DELTA);
+        KEYB = getResources().getInteger(R.integer.SLBC_KEYB);
+        MOUS = getResources().getInteger(R.integer.SLBC_MOUS);
+        MWHL = getResources().getInteger(R.integer.SLBC_MWHL);
+
+        res = getResources();
+
 
         final Handler handler=new Handler();
         handler.post(new Runnable()
@@ -181,8 +203,6 @@ public class MousepadKeyboard extends AppCompatActivity
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
-                long curr = System.currentTimeMillis();
-
                 switch (motionEvent.getAction() & ACTION_MASK)
                 {
                     case (ACTION_DOWN):
@@ -483,6 +503,18 @@ public class MousepadKeyboard extends AppCompatActivity
             }
         });
 
+        homeButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyHome(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyHome(false);
+                return true;
+            }
+        });
+
+
         pgUpButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -490,17 +522,6 @@ public class MousepadKeyboard extends AppCompatActivity
                     keyPgUp(true);
                 else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
                     keyPgUp(false);
-                return true;
-            }
-        });
-
-        delButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
-                    keyDel(true);
-                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
-                    keyDel(false);
                 return true;
             }
         });
@@ -664,121 +685,153 @@ public class MousepadKeyboard extends AppCompatActivity
 
     private void mouseOneFingerOneTap()
     {
-        //TODO send down, up
+        //send mouse btnLeft down, upb
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
         Log.d("EVENTCODE", 1 + "");
     }
 
     private void mouseOneFingerDrag()
     {
-        //TODO send down
+        //send mouse btnLeft down
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
         Log.d("EVENTCODE", 2 + "");
     }
 
     private void mouseOneFingerRelease()
     {
-        //TODO send up
+        //send mouse btnLeft up
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
         Log.d("EVENTCODE", 3 + "");
     }
 
     private void mouseOneFingerDoubleTap()
     {
-        //TODO send down, up, down, up
+        //send mouse btnLeft down, up, down, up
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
         Log.d("EVENTCODE",  4 + "");
     }
 
     private void mouseOneFingerMovement(int x, int y)
     {
-        //TODO send move x and y
+        //send mouse move x and y
+        send( MOUS + " " + x + " " + y);
         Log.d("EVENTCODE", 5 + "");
     }
 
     private void mouseTwoFingerOneTap()
     {
-        //TODO send two finger down, up
+        //send mouse btnRight down, up
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
         Log.d("EVENTCODE", 6 + "");
     }
 
     private void mouseTwoFingerDrag()
     {
-        //TODO send two finger down
+        //DEPRECATED
+        //NOT NEEDED, MOUSE TO MOUSEPAD CONVERSION DOES NOT EXIST
+        //send two finger down
         Log.d("EVENTCODE", 7 + "");
     }
 
     private void mouseTwoFingerRelease()
     {
-        //TODO send two finger up
+        //DEPRECATED
+        //NOT NEEDED, MOUSE TO MOUSEPAD CONVERSION DOES NOT EXIST
+        //send two finger up
         Log.d("EVENTCODE", 8 + "");
     }
 
     private void mouseTwoFingerMovement(int y)
     {
-        //TODO send rel wheel y event
+        //send rel mouse wheel y event
+        send( MWHL + " " + y + " " + 0);
         Log.d("EVENTCODE", 9+ "");
     }
 
     private void btnMouseWheelUp()
     {
-        //TODO send rel vertical mouse up
+        //send rel mouse wheel vertical up
+        send( MWHL + " " + res.getInteger(R.integer.SLBC_MWHL_UP_COUNT) + " " + 0);
         Log.d("EVENTCODE", 10 + "");
     }
 
     private void btnMouseWheelDown()
     {
-        //TODO send rel vertical mouse down
+        //send rel mouse vertical down
+        send( MWHL + " " + res.getInteger(R.integer.SLBC_MWHL_DN_COUNT) + " " + 0);
         Log.d("EVENTCODE", 11 + "");
     }
 
     private void btnMouseLeftDown()
     {
-        //TODO send left mouse down
+        //send left mouse down
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
         Log.d("EVENTCODE", 12 + "");
     }
 
     private void btnMouseLeftUp()
     {
-        //TODO send left mouse up
+        //send left mouse up
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
         Log.d("EVENTCODE", 13 + "");
     }
 
     private void btnMouseRightDown()
     {
-        //TODO send right mouse down
+        //send right mouse down
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
         Log.d("EVENTCODE", 14 + "");
     }
 
     private void btnMouseRightUp()
     {
-        //TODO send right mouse up
+        //send right mouse up
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
         Log.d("EVENTCODE", 15 + "");
     }
 
     private void btnMouseUpDown()
     {
-        //TODO send up mouse down
+        //DEPRECATED
+        //NO NEED
+        //send up mouse down
         Log.d("EVENTCODE", 16 + "");
     }
 
     private void btnMouseUpUp()
     {
-        //TODO send up mouse up
+        //DEPRECATED
+        //NO NEED
+        //send up mouse up
         Log.d("EVENTCODE", 17 + "");
     }
 
     private void btnMouseDownDown()
     {
-        //TODO send down mouse down
+        //DEPRECATED
+        //NO NEED
+        //send down mouse down
         Log.d("EVENTCODE", 18 + "");
     }
 
     private void btnMouseDownUp()
     {
-        //TODO send down mouse up
+        //DEPRECATED
+        //NO NEED
+        //send down mouse up
         Log.d("EVENTCODE", 19 + "");
     }
 
     private void keyEnter()
     {
-        //TODO send enter down, up
+        //send enter down, up
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_ENTER) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_ENTER) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
         Log.d("EVENTCODE", 20 + "");
     }
 
@@ -786,12 +839,14 @@ public class MousepadKeyboard extends AppCompatActivity
     {
         if(down)
         {
-            //TODO send backspace down
+            //send backspace down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_BACKSPACE) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 21 + "");
         }
         else
         {
-            //TODO send backspace up
+            //send backspace up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_BACKSPACE) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 22 + "");
         }
     }
@@ -799,36 +854,147 @@ public class MousepadKeyboard extends AppCompatActivity
     private void key(char key)
     {
         //TODO map key to linux integer and send
+        //this shall be a lot of fun
+
+        switch (key)
+        {
+            case 'q': sendDownUp(res.getInteger(R.integer.SLBC_KEY_Q)); break;
+            case 'w': sendDownUp(res.getInteger(R.integer.SLBC_KEY_W)); break;
+            case 'e': sendDownUp(res.getInteger(R.integer.SLBC_KEY_E)); break;
+            case 'r': sendDownUp(res.getInteger(R.integer.SLBC_KEY_R)); break;
+            case 't': sendDownUp(res.getInteger(R.integer.SLBC_KEY_T)); break;
+            case 'y': sendDownUp(res.getInteger(R.integer.SLBC_KEY_Y)); break;
+            case 'u': sendDownUp(res.getInteger(R.integer.SLBC_KEY_U)); break;
+            case 'i': sendDownUp(res.getInteger(R.integer.SLBC_KEY_I)); break;
+            case 'o': sendDownUp(res.getInteger(R.integer.SLBC_KEY_O)); break;
+            case 'p': sendDownUp(res.getInteger(R.integer.SLBC_KEY_P)); break;
+            case 'a': sendDownUp(res.getInteger(R.integer.SLBC_KEY_A)); break;
+            case 's': sendDownUp(res.getInteger(R.integer.SLBC_KEY_S)); break;
+            case 'd': sendDownUp(res.getInteger(R.integer.SLBC_KEY_D)); break;
+            case 'f': sendDownUp(res.getInteger(R.integer.SLBC_KEY_F)); break;
+            case 'g': sendDownUp(res.getInteger(R.integer.SLBC_KEY_G)); break;
+            case 'h': sendDownUp(res.getInteger(R.integer.SLBC_KEY_H)); break;
+            case 'j': sendDownUp(res.getInteger(R.integer.SLBC_KEY_J)); break;
+            case 'k': sendDownUp(res.getInteger(R.integer.SLBC_KEY_K)); break;
+            case 'l': sendDownUp(res.getInteger(R.integer.SLBC_KEY_L)); break;
+            case 'z': sendDownUp(res.getInteger(R.integer.SLBC_KEY_Z)); break;
+            case 'x': sendDownUp(res.getInteger(R.integer.SLBC_KEY_X)); break;
+            case 'c': sendDownUp(res.getInteger(R.integer.SLBC_KEY_C)); break;
+            case 'v': sendDownUp(res.getInteger(R.integer.SLBC_KEY_V)); break;
+            case 'b': sendDownUp(res.getInteger(R.integer.SLBC_KEY_B)); break;
+            case 'n': sendDownUp(res.getInteger(R.integer.SLBC_KEY_N)); break;
+            case 'm': sendDownUp(res.getInteger(R.integer.SLBC_KEY_M)); break;
+
+            case 'Q': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_Q)); break;
+            case 'W': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_W)); break;
+            case 'E': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_E)); break;
+            case 'R': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_R)); break;
+            case 'T': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_T)); break;
+            case 'Y': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_Y)); break;
+            case 'U': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_U)); break;
+            case 'I': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_I)); break;
+            case 'O': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_O)); break;
+            case 'P': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_P)); break;
+            case 'A': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_A)); break;
+            case 'S': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_S)); break;
+            case 'D': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_D)); break;
+            case 'F': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_F)); break;
+            case 'G': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_G)); break;
+            case 'H': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_H)); break;
+            case 'J': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_J)); break;
+            case 'K': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_K)); break;
+            case 'L': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_L)); break;
+            case 'Z': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_Z)); break;
+            case 'X': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_X)); break;
+            case 'C': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_C)); break;
+            case 'V': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_V)); break;
+            case 'B': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_B)); break;
+            case 'N': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_N)); break;
+            case 'M': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_M)); break;
+
+            case '0': sendDownUp(res.getInteger(R.integer.SLBC_KEY_0)); break;
+            case '1': sendDownUp(res.getInteger(R.integer.SLBC_KEY_1)); break;
+            case '2': sendDownUp(res.getInteger(R.integer.SLBC_KEY_2)); break;
+            case '3': sendDownUp(res.getInteger(R.integer.SLBC_KEY_3)); break;
+            case '4': sendDownUp(res.getInteger(R.integer.SLBC_KEY_4)); break;
+            case '5': sendDownUp(res.getInteger(R.integer.SLBC_KEY_5)); break;
+            case '6': sendDownUp(res.getInteger(R.integer.SLBC_KEY_6)); break;
+            case '7': sendDownUp(res.getInteger(R.integer.SLBC_KEY_7)); break;
+            case '8': sendDownUp(res.getInteger(R.integer.SLBC_KEY_8)); break;
+            case '9': sendDownUp(res.getInteger(R.integer.SLBC_KEY_9)); break;
+
+            case '+': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_EQUAL)); break;
+            case '=': sendDownUp(res.getInteger(R.integer.SLBC_KEY_EQUAL)); break;
+            case '%': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_5)); break;
+            case '/': sendDownUp(res.getInteger(R.integer.SLBC_KEY_SLASH)); break;
+            case '\\':sendDownUp(res.getInteger(R.integer.SLBC_KEY_BACKSLASH)); break;
+            case '$': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_4)); break;
+            case '€': sendAltGr(res.getInteger(R.integer.SLBC_KEY_4)); break;
+            case '£': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_3)); break;
+            case '@': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_APOSTROPHE)); break;
+            case '*': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_8)); break;
+            case '!': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_1)); break;
+            case '#': sendDownUp(res.getInteger(R.integer.SLBC_KEY_GRAVE)); break;
+            case ':': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_SEMICOLON)); break;
+            case ';': sendDownUp(res.getInteger(R.integer.SLBC_KEY_SEMICOLON)); break;
+            case '&': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_7)); break;
+            case '_': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_MINUS)); break;
+            case '(': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_9)); break;
+            case ')': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_0)); break;
+            case '-': sendDownUp(res.getInteger(R.integer.SLBC_KEY_MINUS)); break;
+            case '\'':sendDownUp(res.getInteger(R.integer.SLBC_KEY_APOSTROPHE)); break;
+            case '"': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_2)); break;
+            case ',': sendDownUp(res.getInteger(R.integer.SLBC_KEY_COMMA)); break;
+            case '.': sendDownUp(res.getInteger(R.integer.SLBC_KEY_DOT)); break;
+            case '?': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_SLASH)); break;
+            case '^': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_6)); break;
+            case '[': sendDownUp(res.getInteger(R.integer.SLBC_KEY_LEFTBRACE)); break;
+            case ']': sendDownUp(res.getInteger(R.integer.SLBC_KEY_RIGHTBRACE)); break;
+            case '<': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_COMMA)); break;
+            case '>': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_DOT)); break;
+            case '`': sendDownUp(res.getInteger(R.integer.SLBC_KEY_102ND)); break;
+            case '¬': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_102ND)); break;
+            case '{': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_LEFTBRACE)); break;
+            case '}': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_RIGHTBRACE)); break;
+            case '|': sendAltGr(res.getInteger(R.integer.SLBC_KEY_102ND)); break;
+        }
+
         Log.d("EVENTCODE", 23 + " '" + key + "'");
     }
 
     private void keyf1(boolean down)
     {
         if(down) {
-            //TODO send f1 down
+            //send f1 down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F1) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 24 + ""); }
         else {
-            //TODO send f1 up
+            //send f1 up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F1) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 25 + ""); }
     }
 
     private void keyf2(boolean down)
     {
         if(down) {
-            //TODO send f2 down
+            //send f2 down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F2) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 26 + ""); }
         else {
-            //TODO send f2 up
+            //send f2 up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F2) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 27 + ""); }
     }
 
     private void keyf3(boolean down)
     {
         if(down) {
-            //TODO send f3 down
+            //send f3 down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F3) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 28 + ""); }
         else {
-            //TODO send f3 up
+            //send f3 up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F3) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 29 + ""); }
     }
 
@@ -836,20 +1002,24 @@ public class MousepadKeyboard extends AppCompatActivity
     private void keyf4(boolean down)
     {
         if(down) {
-            //TODO send f4 down
+            //send f4 down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F4) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 30 + ""); }
         else {
-            //TODO send f4 up
+            //send f4 up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F4) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 31 + ""); }
     }
 
     private void keyf5(boolean down)
     {
         if(down) {
-            //TODO send f5 down
+            //send f5 down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F5) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 32 + ""); }
         else {
-            //TODO send f5 up
+            //send f5 up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F5) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 33 + ""); }
     }
 
@@ -857,199 +1027,237 @@ public class MousepadKeyboard extends AppCompatActivity
     private void keyf6(boolean down)
     {
         if(down) {
-            //TODO send f6 down
+            //send f6 down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F6) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 34 + ""); }
         else {
-            //TODO send f6 up
+            //send f6 up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F6) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 35 + ""); }
     }
 
     private void keyf7(boolean down)
     {
         if(down) {
-            //TODO send f7 down
+            //send f7 down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F7) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 36 + ""); }
         else {
-            //TODO send f7 up
+            //send f7 up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F7) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 37 + ""); }
     }
 
     private void keyf8(boolean down)
     {
         if(down) {
-            //TODO send f8 down
+            //send f8 down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F8) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 38 + ""); }
         else {
-            //TODO send f8 up
+            //send f8 up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F8) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 39 + ""); }
     }
 
     private void keyf9(boolean down)
     {
         if(down) {
-            //TODO send f9 down
+            //send f9 down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F9) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 40 + ""); }
         else {
-            //TODO send f9 up
+            //send f9 up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F9) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 41 + ""); }
     }
 
     private void keyEsc(boolean down)
     {
         if(down) {
-            //TODO send esc down
+            //send esc down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_ESC) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 42 + ""); }
         else {
-            //TODO send esc up
+            //send esc up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_ESC) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 43 + ""); }
     }
     private void keyHome(boolean down)
     {
         if(down) {
-            //TODO send home down
+            //send home down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_HOME) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 44 + ""); }
         else {
-            //TODO send home up
+            //send home up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_HOME) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 45 + ""); }
     }
 
     private void keyPgUp(boolean down)
     {
         if(down) {
-            //TODO send PgUp down
+            //send PgUp down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_PAGEUP) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 46 + ""); }
         else {
-            //TODO send PgUp up
+            //send PgUp up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_PAGEUP) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 47 + ""); }
     }
 
     private void keyPgDown(boolean down)
     {
         if(down) {
-            //TODO send PgDn down
+            //send PgDn down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_PAGEDOWN) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 48 + ""); }
         else {
-            //TODO send PgDn up
+            // send PgDn up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_PAGEDOWN) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 49 + ""); }
     }
 
     private void keyDel(boolean down)
     {
         if(down) {
-            //TODO send del down
+            //send del down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_DELETE) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 50 + ""); }
         else {
-            //TODO send del up
+            //send del up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_DELETE) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 51 + ""); }
     }
 
     private void keyTab(boolean down)
     {
         if(down) {
-            //TODO send tab down
+            //send tab down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_TAB) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 52 + ""); }
         else {
-            //TODO send tab up
+            //send tab up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_TAB) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 53 + ""); }
     }
 
     private void keyEnd(boolean down)
     {
         if(down) {
-            //TODO send end down
+            //send end down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_END) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 54 + ""); }
         else {
-            //TODO send end up
+            //send end up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_END) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 55 + ""); }
     }
 
     private void keyIns(boolean down)
     {
         if(down) {
-            //TODO send ins down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_INSERT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 56 + ""); }
         else {
-            //TODO send ins up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_INSERT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 57 + ""); }
     }
 
     private void keyCtrl(boolean down)
     {
         if(down) {
-            //TODO send ctrl down
+            //send ctrl down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTCTRL) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 58 + ""); }
         else {
-            //TODO send ctrl up
+            //send ctrl up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTCTRL) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 59 + ""); }
     }
 
     private void keyWin(boolean down)
     {
         if(down) {
-            //TODO send win down
+            //send win down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTMETA) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 60 + ""); }
         else {
-            //TODO send win up
+            //send win up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTMETA) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 61 + ""); }
     }
 
     private void keyAlt(boolean down)
     {
         if(down) {
-            //TODO send alt down
+            //send alt down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTALT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 62 + ""); }
         else {
-            //TODO send alt up
+            //send alt up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTALT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 63 + ""); }
     }
 
     private void keyShift(boolean down)
     {
         if(down) {
-            //TODO send shift down
+            //send shift down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTSHIFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 64 + ""); }
         else {
-            //TODO send shift up
+            //send shift up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTSHIFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 65 + ""); }
     }
 
     private void keyArrowUp(boolean down)
     {
         if(down) {
-            //TODO send arrowUp down
+            //send arrowUp down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_UP) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 66 + ""); }
         else {
-            //TODO send arrowUp up
+            //send arrowUp up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_UP) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 67 + ""); }
     }
 
     private void keyArrowDown(boolean down)
     {
         if(down) {
-            //TODO send arrowDown down
+            //send arrowDown down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_DOWN) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 68 + ""); }
         else {
-            //TODO send arrowDown up
+            //send arrowDown up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_DOWN) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 69 + ""); }
     }
 
     private void keyArrowLeft(boolean down)
     {
         if(down) {
-            //TODO send arrowLeft down
+            //send arrowLeft down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 70 + ""); }
         else {
-            //TODO send arrowLeft up
+            //send arrowLeft up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 71 + ""); }
     }
 
     private void keyArrowRight(boolean down)
     {
         if(down) {
-            //TODO send arrowLeft down
+            //send arrowLeft down
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 72 + ""); }
         else {
-            //TODO send arrowLeft up
+            //send arrowLeft up
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 73 + ""); }
     }
 
@@ -1116,20 +1324,18 @@ public class MousepadKeyboard extends AppCompatActivity
             else
             {
                 keyboardMouse.setVisibility(View.VISIBLE);
-                //TODO for testing purposes send hello
+                btSocket = bluetoothSocket;
                 try
                 {
                     OutputStream outputStream = bluetoothSocket.getOutputStream();
-                    outputStream.write("hello".getBytes());
-                    outputStream.flush();
-                    bluetoothSocket.close();
+                    btOutputStream = outputStream;
+                }
+                catch (Exception e)
+                {
+                    Toast.makeText(MousepadKeyboard.this, getString(R.string.failedToConnect), Toast.LENGTH_SHORT).show();
                     finish();
                 }
-                catch (Exception e) { }
-
-                //TODO get output stream and set listeners
             }
-
         }
 
 
@@ -1192,5 +1398,40 @@ public class MousepadKeyboard extends AppCompatActivity
     public void toast()
     {
         Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    private void sendDownUp(int keyCode)
+    {
+        send(KEYB + " " + keyCode + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        send(KEYB + " " + keyCode + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
+    }
+
+    private void sendUpperCase(int keyCode)
+    {
+        send(KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTSHIFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        send(KEYB + " " + keyCode + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        send(KEYB + " " + keyCode + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
+        send(KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTSHIFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
+    }
+
+    private void sendAltGr(int keyCode)
+    {
+        send(KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHTALT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        send(KEYB + " " + keyCode + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        send(KEYB + " " + keyCode + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
+        send(KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHTALT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
+    }
+
+    private void send(String str)
+    {
+        if(btOutputStream != null)
+        {
+            try
+            {
+                btOutputStream.write(str.getBytes());
+                btOutputStream.flush();
+            }
+            catch (Exception e) {}
+        }
     }
 }

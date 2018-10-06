@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
         return -1;
     }
 
-    //TODO config input
+
     Input_config * in_config = malloc(sizeof(Input_config));
     in_error = init_input(in_config);
     if(in_error == -1)
@@ -40,7 +40,6 @@ int main(int argc, char const *argv[])
         return -1;
     }
     
-    //TODO CYCLES HERE
     while(!stop)
     {
         client = accept_client(bt_config);
