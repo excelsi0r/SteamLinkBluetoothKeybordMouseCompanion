@@ -139,6 +139,7 @@ public class MousepadKeyboard extends AppCompatActivity
         final Button arrowDownButton = findViewById(R.id.arrowDown);
         final Button arrowLeftButton = findViewById(R.id.arrowLeft);
         final Button arrowRightButton = findViewById(R.id.arrowRight);
+        final Button enterButton = findViewById(R.id.enterButton);
 
         KEYB = getResources().getInteger(R.integer.SLBC_KEYB);
         MOUS = getResources().getInteger(R.integer.SLBC_MOUS);
@@ -672,6 +673,18 @@ public class MousepadKeyboard extends AppCompatActivity
             }
         });
 
+        enterButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent)
+            {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyEnterButton(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyEnterButton(false);
+                return true;
+            }
+        });
+
         BluetoothDevice btDevice = getIntent().getExtras().getParcelable(MainActivity.BLUETOOTH_DEVICE_EXTRA);
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -923,6 +936,7 @@ public class MousepadKeyboard extends AppCompatActivity
             case '8': sendDownUp(res.getInteger(R.integer.SLBC_KEY_8)); break;
             case '9': sendDownUp(res.getInteger(R.integer.SLBC_KEY_9)); break;
 
+            case ' ': sendDownUp(res.getInteger(R.integer.SLBC_KEY_SPACE)); break;
             case '+': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_EQUAL)); break;
             case '=': sendDownUp(res.getInteger(R.integer.SLBC_KEY_EQUAL)); break;
             case '%': sendUpperCase(res.getInteger(R.integer.SLBC_KEY_5)); break;
@@ -1241,11 +1255,11 @@ public class MousepadKeyboard extends AppCompatActivity
     {
         if(down) {
             //send arrowLeft down
-            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 70 + ""); }
         else {
             //send arrowLeft up
-            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 71 + ""); }
     }
 
@@ -1253,12 +1267,20 @@ public class MousepadKeyboard extends AppCompatActivity
     {
         if(down) {
             //send arrowLeft down
-            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
             Log.d("EVENTCODE", 72 + ""); }
         else {
             //send arrowLeft up
-            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
             Log.d("EVENTCODE", 73 + ""); }
+    }
+
+    private void keyEnterButton(boolean down)
+    {
+        if(down)
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_ENTER) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+        else
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_ENTER) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
     }
 
     private void showKeyboard()
@@ -1424,11 +1446,18 @@ public class MousepadKeyboard extends AppCompatActivity
 
     private void send(String str)
     {
+        while(str.getBytes().length < res.getInteger(R.integer.SLBC_KEY_MAX_BYTES))
+        {
+            str += " ";
+        }
+
+        Log.d("SENDBLUETOOTH", str);
+
         if(btOutputStream != null)
         {
             try
             {
-                btOutputStream.write(str.getBytes());
+                btOutputStream.write(str.getBytes(), 0, str.getBytes().length);
                 btOutputStream.flush();
             }
             catch (Exception e) {}

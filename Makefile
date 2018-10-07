@@ -1,5 +1,7 @@
 CC=gcc
+SCC=armv7a-cros-linux-gnueabi-gcc
 CFLAGS= -Wall -lbluetooth
+SCFLAGS= -Wall libbluetooth.a
 DEPS=
 
 ROOT=./server/
@@ -18,7 +20,10 @@ OBJS=$(ROOTOBJS) $(BLOBJS) $(INOBJS) $(PTOBJS) $(SGOBJS)
 
 BIN=server.o
 
-all: service
+all: ubuntu steamlink
 
-service:
+ubuntu:
 	$(CC) $(OBJS) -o $(BIN) $(CFLAGS) $(DEPS)
+
+steamlink:
+	$(SCC) $(OBJS) -o $(BIN) $(SCFLAGS) $(DEPS)

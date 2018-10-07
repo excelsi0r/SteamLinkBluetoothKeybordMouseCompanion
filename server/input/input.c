@@ -70,36 +70,13 @@ void config_group_rel_3(int fd)
 
 void config_virtual_driver(int fd)
 {
-    int version, rc;
-    
-    rc = ioctl(fd, UI_GET_VERSION, &version);
+    /* use UI_USER_DEV */
 
-    if (rc == 0 && version >= 5) 
-    {
-        /* use UI_DEV_SETUP */
+    struct uinput_user_dev uud;
 
-        struct uinput_setup usetup;
+    memset(&uud, 0, sizeof(uud));
+    snprintf(uud.name, UINPUT_MAX_NAME_SIZE, "uinput old interface");
+    write(fd, &uud, sizeof(uud));
 
-        memset(&usetup, 0, sizeof(usetup));
-        usetup.id.bustype = BUS_USB;
-        usetup.id.vendor = 0x1234; /* sample vendor */
-        usetup.id.product = 0x5678; /* sample product */
-        strcpy(usetup.name, "Example device");
-
-        ioctl(fd, UI_DEV_SETUP, &usetup);
-        ioctl(fd, UI_DEV_CREATE);
-
-    }
-    else
-    {
-        /* use UI_USER_DEV */
-
-        struct uinput_user_dev uud;
-
-        memset(&uud, 0, sizeof(uud));
-        snprintf(uud.name, UINPUT_MAX_NAME_SIZE, "uinput old interface");
-        write(fd, &uud, sizeof(uud));
-
-        ioctl(fd, UI_DEV_CREATE);
-    }
+    ioctl(fd, UI_DEV_CREATE);
 }

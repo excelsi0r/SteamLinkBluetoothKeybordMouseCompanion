@@ -50,12 +50,12 @@ void parse(char buf[], Event * event)
 	{
 		char * npEnd = pEnd;			
 
-		float mouse_h = strtof(pEnd, &pEnd);
+		float mouse_v = strtof(pEnd, &pEnd);
 		if(npEnd == pEnd) return;
 
 		npEnd = pEnd;		
 
-		float mouse_v = strtof(pEnd, &pEnd);
+		float mouse_h = strtof(pEnd, &pEnd);
 		if(npEnd == pEnd) return;
 
 		event->valid = 1;

@@ -304,15 +304,23 @@
             android:id="@+id/shiftButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="3"
             android:text="⇧"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/enterButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:text="↵"
             android:textSize="30sp" />
 
         <ImageButton
             android:id="@+id/keyboardButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="2"
             app:srcCompat="@drawable/ic_keyboard" />
     </LinearLayout>
 

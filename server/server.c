@@ -53,6 +53,8 @@ int main(int argc, char const *argv[])
                 break;
             }
         }
+
+        //printf("Attempt Bluetooth accept\n");
     }
 
     //Custom behavior children
@@ -70,6 +72,8 @@ int main(int argc, char const *argv[])
         while(!stop)
         {
             receive_event(buf, client, event, in_config);
+
+            //printf("Attempt Receive event\n");
         }
 
         free(event);

@@ -36,10 +36,12 @@ int init_bluetooth(Bluetooth_config * bt_config)
         return 1;
 	
 	//set socket for nonblock
+	/*
     result = fcntl(bt_config->socket, F_SETFL, O_NONBLOCK);
 	printf("Setting socket for nonblock\n"); fflush(stdout);
     if(result == -1)
         return 1;	
+	*/
 
     return 0;
 }

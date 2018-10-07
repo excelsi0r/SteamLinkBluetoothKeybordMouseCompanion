@@ -7,6 +7,8 @@
     <integer name="SLBC_MWHL_DN_COUNT">-1</integer>
     <integer name="SLBC_KEY_ACTION_DOWN">1</integer>
     <integer name="SLBC_KEY_ACTION_UP">0</integer>
+    <integer name="SLBC_KEY_MAX_BYTES">10</integer>
+
 
     <!-- LINUX INPUT KEY EVENT CODES -->
     <integer name="SLBC_INPUT_PROP_POINTER">0x00</integer>
