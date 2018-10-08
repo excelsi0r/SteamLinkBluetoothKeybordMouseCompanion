@@ -247,7 +247,7 @@
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/arrowRight"
+            android:id="@+id/arrowLeft"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -263,7 +263,7 @@
             android:textSize="24sp" />
 
         <Button
-            android:id="@+id/arrowLeft"
+            android:id="@+id/arrowRight"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"

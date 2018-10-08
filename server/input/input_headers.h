@@ -27,6 +27,6 @@ void config_group_btn_2(int fd);
 void config_group_rel_3(int fd);
 void config_virtual_driver(int fd);
 
-void receive_event(char * buf, int client, Event * event, Input_config * in_config);
+int receive_event(char * buf, int client, Event * event, Input_config * in_config);
 
 #endif

@@ -1,6 +1,6 @@
 #include "input_headers.h"
 
-void receive_event(char * buf, int client, Event * event, Input_config * in_config)
+int receive_event(char * buf, int client, Event * event, Input_config * in_config)
 {
     fd_set rfds;
     struct timeval tv;
@@ -11,7 +11,7 @@ void receive_event(char * buf, int client, Event * event, Input_config * in_conf
 
     tv.tv_sec = MAX_TIMEOUT;
     tv.tv_usec = 0;
-
+    
     retval = select(client + 1, &rfds, NULL, NULL, &tv);
 
     if (retval == -1)
@@ -25,7 +25,7 @@ void receive_event(char * buf, int client, Event * event, Input_config * in_conf
         {
             parse(buf ,event);
 
-            printf("Received [%s], #bytes_read: [%d], valid [%d], keyb [%d], mouse [%d], mwhel [%d],\n", buf, bytes_read, event->valid, event->key_ev, event->mouse_ev, event->mousewheel_ev);
+            //printf("Received [%s], #bytes_read: [%d], valid [%d], keyb [%d], mouse [%d], mwhel [%d],\n", buf, bytes_read, event->valid, event->key_ev, event->mouse_ev, event->mousewheel_ev);
             
             if(event->valid && event->mouse_ev)
             {
@@ -45,5 +45,11 @@ void receive_event(char * buf, int client, Event * event, Input_config * in_conf
                 emit(in_config->file, EV_SYN, SYN_REPORT, 0);
             }
         }
+        else if(bytes_read <= 0)
+        {
+            return -1;
+        }
     }
+
+    return 0;
 }

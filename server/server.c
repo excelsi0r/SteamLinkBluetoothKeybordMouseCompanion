@@ -71,7 +71,8 @@ int main(int argc, char const *argv[])
         // read data from the client
         while(!stop)
         {
-            receive_event(buf, client, event, in_config);
+            if(receive_event(buf, client, event, in_config) == -1)
+                break;
         }
 
         free(event);

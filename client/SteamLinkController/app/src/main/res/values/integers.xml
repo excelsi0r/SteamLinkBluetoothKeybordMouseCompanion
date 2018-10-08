@@ -1,5 +1,6 @@
 <resources>
     <integer name="MAX_DELTA">150</integer>
+    <integer name="SLBC_MAX_DELTA_MOVEMENT">0</integer>
     <integer name="SLBC_KEYB">1</integer>
     <integer name="SLBC_MOUS">2</integer>
     <integer name="SLBC_MWHL">3</integer>
@@ -8,7 +9,6 @@
     <integer name="SLBC_KEY_ACTION_DOWN">1</integer>
     <integer name="SLBC_KEY_ACTION_UP">0</integer>
     <integer name="SLBC_KEY_MAX_BYTES">10</integer>
-
 
     <!-- LINUX INPUT KEY EVENT CODES -->
     <integer name="SLBC_INPUT_PROP_POINTER">0x00</integer>

@@ -47,6 +47,7 @@ import static android.view.MotionEvent.*;
 public class MousepadKeyboard extends AppCompatActivity
 {
     private final int DELAY = 10;
+    private final int CHECK_DELAY = 5000;
     private final int MAX_RETRIES = 3;
     private final int REQUEST_ENABLE_BT = 1;
     private final static int RFCOMM_CHANNEL = 11;
@@ -58,6 +59,12 @@ public class MousepadKeyboard extends AppCompatActivity
     private final String UbuntuServerAddress = "A0:88:69:70:80:9F";
     private final String XUbuntuServerAddress = "00:19:0E:00:9E:C1";
     private final String SteamLinkServerAddress = "E0:31:9E:07:07:66";
+
+    //Handlers
+    private final Handler checkConnection = new Handler();
+    private Runnable checkConnectionRunnable;
+    private final Handler handler = new Handler();
+    private Runnable handlerRunnable;
 
     //one finger mousepad
     private OneFingerFSM oneFingerFSM = new OneFingerFSM();
@@ -92,10 +99,11 @@ public class MousepadKeyboard extends AppCompatActivity
     {
         super.onDestroy();
 
+        checkConnection.removeCallbacks(checkConnectionRunnable);
+        handler.removeCallbacks(handlerRunnable);
+
         try { btOutputStream.close(); } catch (Exception e) {}
         try { btSocket.close(); } catch (Exception e) {}
-
-        finish();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -148,8 +156,32 @@ public class MousepadKeyboard extends AppCompatActivity
         res = getResources();
 
 
-        final Handler handler=new Handler();
-        handler.post(new Runnable()
+        checkConnection.post(checkConnectionRunnable = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                //Test if it is closed
+                if(btOutputStream != null)
+                {
+                    try
+                    {
+                        btOutputStream.write("testtesttest".getBytes(), 0, 10);
+                        btOutputStream.flush();
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "Connection with server closed", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                }
+                checkConnection.postDelayed(this, CHECK_DELAY);
+            }
+        });
+
+
+        handler.post(handlerRunnable = new Runnable()
         {
             @Override
             public void run()
@@ -200,6 +232,7 @@ public class MousepadKeyboard extends AppCompatActivity
         {
             int posX = 0;
             int posY = 0;
+            long lastMove = 0;
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent)
@@ -224,15 +257,16 @@ public class MousepadKeyboard extends AppCompatActivity
                     case (ACTION_MOVE):
                         int diffX = (int) motionEvent.getX() - posX;
                         int diffY = (int) motionEvent.getY() - posY;
+                        long diffMov = System.currentTimeMillis() - lastMove;
 
-                        if(motionEvent.getPointerCount() == 1 && (diffX != 0 || diffY != 0))
-                        {
-                            mouseOneFingerMovement(diffX, diffY);
+                        if(diffMov > res.getInteger(R.integer.SLBC_MAX_DELTA_MOVEMENT)) {
+                            if (motionEvent.getPointerCount() == 1 && (diffX != 0 || diffY != 0)) {
+                                mouseOneFingerMovement(diffX, diffY);
+                            } else if (motionEvent.getPointerCount() > 1 && diffY != 0) {
+                                mouseTwoFingerMovement(diffY);
+                            }
                         }
-                        else if(motionEvent.getPointerCount() > 1 && diffY != 0)
-                        {
-                            mouseTwoFingerMovement(diffY);
-                        }
+                        else return true;
 
                         break;
                     case (ACTION_POINTER_DOWN):
@@ -701,21 +735,21 @@ public class MousepadKeyboard extends AppCompatActivity
         //send mouse btnLeft down, upb
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-        Log.d("EVENTCODE", 1 + "");
+        //Log.d("EVENTCODE", 1 + "");
     }
 
     private void mouseOneFingerDrag()
     {
         //send mouse btnLeft down
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-        Log.d("EVENTCODE", 2 + "");
+        //Log.d("EVENTCODE", 2 + "");
     }
 
     private void mouseOneFingerRelease()
     {
         //send mouse btnLeft up
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-        Log.d("EVENTCODE", 3 + "");
+        //Log.d("EVENTCODE", 3 + "");
     }
 
     private void mouseOneFingerDoubleTap()
@@ -725,14 +759,14 @@ public class MousepadKeyboard extends AppCompatActivity
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-        Log.d("EVENTCODE",  4 + "");
+        //Log.d("EVENTCODE",  4 + "");
     }
 
     private void mouseOneFingerMovement(int x, int y)
     {
         //send mouse move x and y
         send( MOUS + " " + x + " " + y);
-        Log.d("EVENTCODE", 5 + "");
+        //Log.d("EVENTCODE", 5 + "");
     }
 
     private void mouseTwoFingerOneTap()
@@ -740,7 +774,7 @@ public class MousepadKeyboard extends AppCompatActivity
         //send mouse btnRight down, up
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-        Log.d("EVENTCODE", 6 + "");
+        //Log.d("EVENTCODE", 6 + "");
     }
 
     private void mouseTwoFingerDrag()
@@ -748,7 +782,7 @@ public class MousepadKeyboard extends AppCompatActivity
         //DEPRECATED
         //NOT NEEDED, MOUSE TO MOUSEPAD CONVERSION DOES NOT EXIST
         //send two finger down
-        Log.d("EVENTCODE", 7 + "");
+        //Log.d("EVENTCODE", 7 + "");
     }
 
     private void mouseTwoFingerRelease()
@@ -756,56 +790,56 @@ public class MousepadKeyboard extends AppCompatActivity
         //DEPRECATED
         //NOT NEEDED, MOUSE TO MOUSEPAD CONVERSION DOES NOT EXIST
         //send two finger up
-        Log.d("EVENTCODE", 8 + "");
+        //Log.d("EVENTCODE", 8 + "");
     }
 
     private void mouseTwoFingerMovement(int y)
     {
         //send rel mouse wheel y event
         send( MWHL + " " + y + " " + 0);
-        Log.d("EVENTCODE", 9+ "");
+        //Log.d("EVENTCODE", 9+ "");
     }
 
     private void btnMouseWheelUp()
     {
         //send rel mouse wheel vertical up
         send( MWHL + " " + res.getInteger(R.integer.SLBC_MWHL_UP_COUNT) + " " + 0);
-        Log.d("EVENTCODE", 10 + "");
+        //Log.d("EVENTCODE", 10 + "");
     }
 
     private void btnMouseWheelDown()
     {
         //send rel mouse vertical down
         send( MWHL + " " + res.getInteger(R.integer.SLBC_MWHL_DN_COUNT) + " " + 0);
-        Log.d("EVENTCODE", 11 + "");
+        //Log.d("EVENTCODE", 11 + "");
     }
 
     private void btnMouseLeftDown()
     {
         //send left mouse down
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-        Log.d("EVENTCODE", 12 + "");
+        //Log.d("EVENTCODE", 12 + "");
     }
 
     private void btnMouseLeftUp()
     {
         //send left mouse up
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-        Log.d("EVENTCODE", 13 + "");
+        //Log.d("EVENTCODE", 13 + "");
     }
 
     private void btnMouseRightDown()
     {
         //send right mouse down
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-        Log.d("EVENTCODE", 14 + "");
+        //Log.d("EVENTCODE", 14 + "");
     }
 
     private void btnMouseRightUp()
     {
         //send right mouse up
         send( KEYB + " " + res.getInteger(R.integer.SLBC_BTN_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-        Log.d("EVENTCODE", 15 + "");
+        //Log.d("EVENTCODE", 15 + "");
     }
 
     private void btnMouseUpDown()
@@ -813,7 +847,7 @@ public class MousepadKeyboard extends AppCompatActivity
         //DEPRECATED
         //NO NEED
         //send up mouse down
-        Log.d("EVENTCODE", 16 + "");
+        //Log.d("EVENTCODE", 16 + "");
     }
 
     private void btnMouseUpUp()
@@ -821,7 +855,7 @@ public class MousepadKeyboard extends AppCompatActivity
         //DEPRECATED
         //NO NEED
         //send up mouse up
-        Log.d("EVENTCODE", 17 + "");
+        //Log.d("EVENTCODE", 17 + "");
     }
 
     private void btnMouseDownDown()
@@ -829,7 +863,7 @@ public class MousepadKeyboard extends AppCompatActivity
         //DEPRECATED
         //NO NEED
         //send down mouse down
-        Log.d("EVENTCODE", 18 + "");
+        //Log.d("EVENTCODE", 18 + "");
     }
 
     private void btnMouseDownUp()
@@ -837,7 +871,7 @@ public class MousepadKeyboard extends AppCompatActivity
         //DEPRECATED
         //NO NEED
         //send down mouse up
-        Log.d("EVENTCODE", 19 + "");
+        //Log.d("EVENTCODE", 19 + "");
     }
 
     private void keyEnter()
@@ -845,7 +879,7 @@ public class MousepadKeyboard extends AppCompatActivity
         //send enter down, up
         send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_ENTER) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
         send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_ENTER) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-        Log.d("EVENTCODE", 20 + "");
+        //Log.d("EVENTCODE", 20 + "");
     }
 
     private void keyBackspace(boolean down)
@@ -854,13 +888,13 @@ public class MousepadKeyboard extends AppCompatActivity
         {
             //send backspace down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_BACKSPACE) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 21 + "");
+            //Log.d("EVENTCODE", 21 + "");
         }
         else
         {
             //send backspace up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_BACKSPACE) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 22 + "");
+            //Log.d("EVENTCODE", 22 + "");
         }
     }
 
@@ -973,7 +1007,7 @@ public class MousepadKeyboard extends AppCompatActivity
             case '|': sendAltGr(res.getInteger(R.integer.SLBC_KEY_102ND)); break;
         }
 
-        Log.d("EVENTCODE", 23 + " '" + key + "'");
+        //Log.d("EVENTCODE", 23 + " '" + key + "'");
     }
 
     private void keyf1(boolean down)
@@ -981,11 +1015,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send f1 down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F1) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 24 + ""); }
+            //Log.d("EVENTCODE", 24 + "");
+        }
         else {
             //send f1 up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F1) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 25 + ""); }
+            //Log.d("EVENTCODE", 25 + "");
+        }
     }
 
     private void keyf2(boolean down)
@@ -993,11 +1029,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send f2 down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F2) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 26 + ""); }
+            //Log.d("EVENTCODE", 26 + "");
+        }
         else {
             //send f2 up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F2) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 27 + ""); }
+            //Log.d("EVENTCODE", 27 + "");
+        }
     }
 
     private void keyf3(boolean down)
@@ -1005,11 +1043,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send f3 down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F3) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 28 + ""); }
+            //Log.d("EVENTCODE", 28 + "");
+        }
         else {
             //send f3 up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F3) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 29 + ""); }
+            //Log.d("EVENTCODE", 29 + "");
+        }
     }
 
 
@@ -1018,11 +1058,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send f4 down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F4) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 30 + ""); }
+            //Log.d("EVENTCODE", 30 + "");
+        }
         else {
             //send f4 up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F4) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 31 + ""); }
+            //Log.d("EVENTCODE", 31 + "");
+        }
     }
 
     private void keyf5(boolean down)
@@ -1030,11 +1072,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send f5 down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F5) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 32 + ""); }
+            //Log.d("EVENTCODE", 32 + "");
+        }
         else {
             //send f5 up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F5) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 33 + ""); }
+            //Log.d("EVENTCODE", 33 + "");
+        }
     }
 
 
@@ -1043,11 +1087,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send f6 down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F6) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 34 + ""); }
+            //Log.d("EVENTCODE", 34 + "");
+        }
         else {
             //send f6 up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F6) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 35 + ""); }
+            //Log.d("EVENTCODE", 35 + "");
+        }
     }
 
     private void keyf7(boolean down)
@@ -1055,11 +1101,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send f7 down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F7) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 36 + ""); }
+            //Log.d("EVENTCODE", 36 + "");
+        }
         else {
             //send f7 up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F7) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 37 + ""); }
+            //Log.d("EVENTCODE", 37 + "");
+        }
     }
 
     private void keyf8(boolean down)
@@ -1067,11 +1115,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send f8 down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F8) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 38 + ""); }
+            //Log.d("EVENTCODE", 38 + "");
+        }
         else {
             //send f8 up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F8) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 39 + ""); }
+            //Log.d("EVENTCODE", 39 + "");
+        }
     }
 
     private void keyf9(boolean down)
@@ -1079,11 +1129,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send f9 down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F9) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 40 + ""); }
+            //Log.d("EVENTCODE", 40 + "");
+        }
         else {
             //send f9 up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_F9) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 41 + ""); }
+            //Log.d("EVENTCODE", 41 + "");
+        }
     }
 
     private void keyEsc(boolean down)
@@ -1091,22 +1143,26 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send esc down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_ESC) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 42 + ""); }
+            //Log.d("EVENTCODE", 42 + "");
+        }
         else {
             //send esc up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_ESC) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 43 + ""); }
+            //Log.d("EVENTCODE", 43 + "");
+        }
     }
     private void keyHome(boolean down)
     {
         if(down) {
             //send home down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_HOME) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 44 + ""); }
+            //Log.d("EVENTCODE", 44 + "");
+        }
         else {
             //send home up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_HOME) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 45 + ""); }
+            //Log.d("EVENTCODE", 45 + "");
+        }
     }
 
     private void keyPgUp(boolean down)
@@ -1114,11 +1170,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send PgUp down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_PAGEUP) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 46 + ""); }
+            //Log.d("EVENTCODE", 46 + "");
+        }
         else {
             //send PgUp up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_PAGEUP) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 47 + ""); }
+            //Log.d("EVENTCODE", 47 + "");
+        }
     }
 
     private void keyPgDown(boolean down)
@@ -1126,11 +1184,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send PgDn down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_PAGEDOWN) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 48 + ""); }
+            //Log.d("EVENTCODE", 48 + "");
+        }
         else {
             // send PgDn up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_PAGEDOWN) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 49 + ""); }
+            //Log.d("EVENTCODE", 49 + "");
+        }
     }
 
     private void keyDel(boolean down)
@@ -1138,11 +1198,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send del down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_DELETE) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 50 + ""); }
+            //Log.d("EVENTCODE", 50 + "");
+        }
         else {
             //send del up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_DELETE) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 51 + ""); }
+            //Log.d("EVENTCODE", 51 + "");
+        }
     }
 
     private void keyTab(boolean down)
@@ -1150,11 +1212,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send tab down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_TAB) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 52 + ""); }
+            //Log.d("EVENTCODE", 52 + "");
+        }
         else {
             //send tab up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_TAB) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 53 + ""); }
+            //Log.d("EVENTCODE", 53 + "");
+        }
     }
 
     private void keyEnd(boolean down)
@@ -1162,21 +1226,25 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send end down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_END) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 54 + ""); }
+            //Log.d("EVENTCODE", 54 + "");
+        }
         else {
             //send end up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_END) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 55 + ""); }
+            //Log.d("EVENTCODE", 55 + "");
+        }
     }
 
     private void keyIns(boolean down)
     {
         if(down) {
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_INSERT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 56 + ""); }
+            //Log.d("EVENTCODE", 56 + "");
+        }
         else {
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_INSERT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 57 + ""); }
+            //Log.d("EVENTCODE", 57 + "");
+        }
     }
 
     private void keyCtrl(boolean down)
@@ -1184,11 +1252,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send ctrl down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTCTRL) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 58 + ""); }
+            //Log.d("EVENTCODE", 58 + "");
+        }
         else {
             //send ctrl up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTCTRL) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 59 + ""); }
+            //Log.d("EVENTCODE", 59 + "");
+        }
     }
 
     private void keyWin(boolean down)
@@ -1196,11 +1266,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send win down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTMETA) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 60 + ""); }
+            //Log.d("EVENTCODE", 60 + "");
+        }
         else {
             //send win up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTMETA) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 61 + ""); }
+            //Log.d("EVENTCODE", 61 + "");
+        }
     }
 
     private void keyAlt(boolean down)
@@ -1208,11 +1280,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send alt down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTALT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 62 + ""); }
+            //Log.d("EVENTCODE", 62 + "");
+        }
         else {
             //send alt up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTALT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 63 + ""); }
+            //Log.d("EVENTCODE", 63 + "");
+        }
     }
 
     private void keyShift(boolean down)
@@ -1220,11 +1294,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send shift down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTSHIFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 64 + ""); }
+            //Log.d("EVENTCODE", 64 + "");
+        }
         else {
             //send shift up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFTSHIFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 65 + ""); }
+            //Log.d("EVENTCODE", 65 + "");
+        }
     }
 
     private void keyArrowUp(boolean down)
@@ -1232,11 +1308,13 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send arrowUp down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_UP) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 66 + ""); }
+            //Log.d("EVENTCODE", 66 + "");
+        }
         else {
             //send arrowUp up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_UP) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 67 + ""); }
+            //Log.d("EVENTCODE", 67 + "");
+        }
     }
 
     private void keyArrowDown(boolean down)
@@ -1244,35 +1322,41 @@ public class MousepadKeyboard extends AppCompatActivity
         if(down) {
             //send arrowDown down
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_DOWN) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 68 + ""); }
+            //Log.d("EVENTCODE", 68 + "");
+        }
         else {
             //send arrowDown up
             send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_DOWN) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 69 + ""); }
+            //Log.d("EVENTCODE", 69 + "");
+        }
     }
 
     private void keyArrowLeft(boolean down)
     {
         if(down) {
             //send arrowLeft down
-            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 70 + ""); }
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+            //Log.d("EVENTCODE", 70 + "");
+        }
         else {
             //send arrowLeft up
-            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 71 + ""); }
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
+            //Log.d("EVENTCODE", 71 + "");
+        }
     }
 
     private void keyArrowRight(boolean down)
     {
         if(down) {
             //send arrowLeft down
-            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
-            Log.d("EVENTCODE", 72 + ""); }
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_DOWN));
+            //Log.d("EVENTCODE", 72 + "");
+        }
         else {
             //send arrowLeft up
-            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_LEFT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
-            Log.d("EVENTCODE", 73 + ""); }
+            send( KEYB + " " + res.getInteger(R.integer.SLBC_KEY_RIGHT) + " " + res.getInteger(R.integer.SLBC_KEY_ACTION_UP));
+            //Log.d("EVENTCODE", 73 + "");
+        }
     }
 
     private void keyEnterButton(boolean down)
@@ -1451,7 +1535,7 @@ public class MousepadKeyboard extends AppCompatActivity
             str += " ";
         }
 
-        Log.d("SENDBLUETOOTH", str);
+        //Log.d("SENDBLUETOOTH", str);
 
         if(btOutputStream != null)
         {
