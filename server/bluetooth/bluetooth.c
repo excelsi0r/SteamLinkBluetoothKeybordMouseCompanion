@@ -35,20 +35,49 @@ int init_bluetooth(Bluetooth_config * bt_config)
     if(result == -1)
         return 1;
 	
-	//set socket for nonblock
-	/*
-    result = fcntl(bt_config->socket, F_SETFL, O_NONBLOCK);
-	printf("Setting socket for nonblock\n"); fflush(stdout);
-    if(result == -1)
-        return 1;	
-	*/
+    return 0;
+}
 
+int init_bluetooth_l2cap(Bluetooth_config * bt_config)
+{
+	bt_config->opt = sizeof(bt_config->rem_addr_l2);
+    struct sockaddr_l2 loc_addr = { 0 };
+    int result;
+
+    //local bluetooth adapter
+    loc_addr.l2_family = AF_BLUETOOTH;
+	loc_addr.l2_bdaddr = *BDADDR_ANY;
+	loc_addr.l2_psm = htobs(0x1001);
+
+    //allocate socket
+    bt_config->socket = socket(AF_BLUETOOTH, SOCK_SEQPACKET, BTPROTO_L2CAP);
+	printf("Allocated socket code: %i\n",bt_config->socket); fflush(stdout);
+    if(bt_config->socket == -1)
+		return 1;
+
+    // bind socket to port 11 of the first available 
+	result = bind(bt_config->socket, (struct sockaddr *)&loc_addr, sizeof(loc_addr));
+    printf("bind() returned %d\n", result);
+    if(result == -1)
+        return 1;
+
+    // put socket into listening mode
+	result = listen(bt_config->socket, 1);
+	printf("listen() returned %d\n", result);
+    if(result == -1)
+        return 1;
+	
     return 0;
 }
 
 int close_bluetooth(Bluetooth_config * bt_config)
 {
 	close(bt_config->socket);
+	return 0;
+}
+
+int close_session(Bluetooth_config * bt_config)
+{
 	sdp_close(bt_config->session);
 	return 0;
 }
