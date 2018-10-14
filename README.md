@@ -16,7 +16,10 @@ Requirments:
  * MacOs, Linux Machine or Windows with Linux terminal (exapmle: windows 10 with ubuntu from Store)
  
 #### 1st Step: Enable Steamlink SSH and retrieve IP address
-The SteamLinkSDK repository explains very well how to enable ssh under SteamLink. [Enalbe SSH in Steamlink](https://github.com/ValveSoftware/steamlink-sdk#ssh-access)
+The SteamLinkSDK repository explains very well how to enable ssh under SteamLink. 
+
+[Enalbe SSH in Steamlink](https://github.com/ValveSoftware/steamlink-sdk#ssh-access)
+
 Basically: Format a pen drive to FAT32 format, Inside the pen-drive create folder `steamlink`, inside create `config`, inside again create `system` and finally inside create the text file `enable_ssh.txt`. Open the file and write `SteamLink`, save and close it. Now power cycle the device, this means you need to unplug SteamLink from electricity and plug it again, Shutting down from the SteamLink itself it will only put it to sleep and it will not enable SSH. Do not change the password.
 
 Now, boot up SteamLink and retrieve the `IP Address` by going down to Settings->Network. If you don't have an IP Address then it means you are not connected to your Home Network. The IP Adress should have the following format: `X.X.X.X` where `X` is a number from 1 to 255.
