@@ -1,7 +1,7 @@
 CC=gcc
 SCC=armv7a-cros-linux-gnueabi-gcc
 CFLAGS= -Wall -lbluetooth
-SCFLAGS= -Wall libbluetooth.a
+SCFLAGS= -Wall ./resources/Libbluetooth/libbluetooth.a
 DEPS=
 
 ROOT=./server/
@@ -19,6 +19,7 @@ SGOBJS=$(SGDIR)signal.c
 OBJS=$(ROOTOBJS) $(BLOBJS) $(INOBJS) $(PTOBJS) $(SGOBJS)
 
 BIN=server.o
+STEAMLINKBIN=bluetoothcontroller.o
 
 all: ubuntu steamlink
 
@@ -26,4 +27,4 @@ ubuntu:
 	$(CC) $(OBJS) -o $(BIN) $(CFLAGS) $(DEPS)
 
 steamlink:
-	$(SCC) $(OBJS) -o $(BIN) $(SCFLAGS) $(DEPS)
+	$(SCC) $(OBJS) -o $(STEAMLINKBIN) $(SCFLAGS) $(DEPS)
