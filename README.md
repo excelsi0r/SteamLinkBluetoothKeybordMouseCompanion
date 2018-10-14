@@ -27,7 +27,7 @@ Now, boot up SteamLink and retrieve the `IP Address` by going down to Settings->
 Write down the IP Adress, we will need it for the next Step.
 
 #### 2nd Step: Run Script by passing IP
-Download the script [SteamLink Setup Script](https://github.com/excelsi0r/SteamLinkBluetoothController/releases/download/v0.1-beta/setup-steamlink.sh)
+Download the script [SteamLink Setup Script](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.1-beta/setup-steamlink.sh)
 
 Run the script with your steamlink IP Address. Ex: `./setup-steamlink.sh 192.168.1.105`
 
