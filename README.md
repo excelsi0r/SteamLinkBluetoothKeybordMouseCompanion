@@ -1,7 +1,7 @@
-# Steam Link Bluetooth Controller
-Steam link Bluetooth controller. Support for keyboard mouse and gamepad.
+# Steam Link Bluetooth Keyboard and Mouse Companion
+Steam link Bluetooth Keyboard and Mouse Companion. Support for keyboard mouse.
 
-Gamepad and wireless support is currently in development.
+Wireless support is currently in development.
 
 ## Introduction
 The objective of this project is to create a support keyboard, mouse and gamepad to help with steamk link user interaction. The app is to be developed to android in a first initial release and the communication is featured via bluetooth. No need to buy additional mouse, keyboard or second gamepad. No need to always move the peripherals arround. The bluetooth data transfer was chosen because the steam link supports bluetooth. Given that, in some conditions useres might not have wireless connection due to distance reasons. However, bluetooth will always be close to the players becuase a proper close quarters interactions is needed with steam link.
