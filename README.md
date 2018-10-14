@@ -26,7 +26,15 @@ Now, boot up SteamLink and retrieve the `IP Address` by going down to Settings->
 
 Write down the IP Adress, we will need it for the next Step.
 
-#### 2nd Step: Run Script by passing IP
+#### 2nd Step: Pair SteamLink with your android device
+First, Download the Client App from the Play Store, [SteamLink Keyboard Mouse Companion](), open and notice the underlined number by the format `XX:XX:XX:XX:XX:XX` that is your device MAC Address, note it down we are gonna need that later.
+
+Since SteamLink does not provide a proper UI for the users to pair devices, we have to pair via terminal.
+Open a SSH connection from termianl `ssh root@<STEAMLINK_IP_ADDRESS>`. Don't forget to change <STEAMLINK_IP_ADDRESS> for the real address that you retrieved last step.
+
+Now, follow the Tutorial on the Wiki to pair the device, in the last step you will need the MAC address that you wrote down in the beginning of this step. [Bluetooth Pairing With SteamLink](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/wiki/Research#bluetooth-pairing-with-steamlink)
+
+#### 3rd Step: Run Script by passing IP
 Download the script [SteamLink Setup Script](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.1-beta/setup-steamlink.sh)
 
 Run the script with your steamlink IP Address. Ex: `./setup-steamlink.sh 192.168.1.105`
