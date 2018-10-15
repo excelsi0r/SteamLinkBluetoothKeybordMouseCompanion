@@ -35,7 +35,7 @@ Open a SSH connection from termianl `ssh root@<STEAMLINK_IP_ADDRESS>`. Don't for
 Now, follow the Tutorial on the Wiki to pair the device, in the last step you will need the MAC address that you wrote down in the beginning of this step. [Bluetooth Pairing With SteamLink](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/wiki/Research#bluetooth-pairing-with-steamlink)
 
 #### 3rd Step: Run Script by passing IP
-Download the script [SteamLink Setup Script](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.1-beta/setup-steamlink.sh)
+Download the script [SteamLink Setup Script](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.2-beta/setup-steamlink.sh)
 
 Run the script with your steamlink IP Address. Ex: `./setup-steamlink.sh 192.168.1.105`
 
