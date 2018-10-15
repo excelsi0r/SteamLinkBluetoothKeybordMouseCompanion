@@ -8,10 +8,16 @@
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5" />
+
     <TextView
         android:id="@+id/yourMACview"
         android:layout_width="match_parent"
-        android:layout_height="94dp"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:gravity="center_horizontal"
         android:text="@string/yourMACviewText"
         android:textAlignment="center"
@@ -22,8 +28,8 @@
     <TextView
         android:id="@+id/myMACviewText"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:editable="false"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:ems="10"
         android:gravity="center_horizontal"
         android:inputType="textPersonName"
@@ -32,19 +38,40 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="27dp" />
+        android:layout_height="0dp"
+        android:layout_weight="0.5" />
 
     <Button
         android:id="@+id/connectButton"
         android:layout_width="277dp"
-        android:layout_height="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
         android:text="@string/connectButton"
         android:textAlignment="center" />
 
     <Button
         android:id="@+id/exitButton"
         android:layout_width="277dp"
-        android:layout_height="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
         android:text="@string/exitButton" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5" />
+
+    <TextView
+        android:id="@+id/linkTextView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5" />
 
 </LinearLayout>

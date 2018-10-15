@@ -10,13 +10,15 @@ import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import nuno.steamlinkcontroller.R;
 
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity
         connectButton = findViewById(R.id.connectButton);
         exitButton = findViewById(R.id.exitButton);
         myMacView = findViewById(R.id.myMACviewText);
+        final TextView linkTextView = findViewById(R.id.linkTextView);
 
         //Checking Bluetooth Supported
         SpannableString content = null;
@@ -129,8 +132,13 @@ public class MainActivity extends AppCompatActivity
                 //In case device is not available
                 Toast.makeText(this, getString(R.string.savedDeviceNotAvailable), Toast.LENGTH_SHORT).show();
             }
-
         }
+
+        Spanned html = Html.fromHtml("<a href='" + getResources().getString(R.string.githubPage) + "'>Server Setup</a>");
+
+        linkTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+        linkTextView.setText(html);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)

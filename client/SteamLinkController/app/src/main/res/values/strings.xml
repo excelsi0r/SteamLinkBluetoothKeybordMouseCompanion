@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Steam Link Companion</string>
+    <string name="githubPage">https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion#setup</string>
     <string name="connectButton">Connect</string>
     <string name="editButton">Edit</string>
     <string name="exitButton">Exit</string>
