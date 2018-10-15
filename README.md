@@ -61,3 +61,14 @@ Oncd it finishes, reboot Raspbian.
 
 #### 3rd: Run Android App
 Open android app, press Connect and select the rasperrypi in the list of paired devices.
+
+## Contribute
+If you wish to contribute there is pleanty of work to be done. You can view the [Dashboard](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/projects/1) for contributions.
+
+Right now:
+ * Using Wireless TCP and UDP sockets as an alternative for Bluetooth (TCP for keys and Buttons, UDP for mouse movement)
+ * Support for differente Layouts, right now the only supported layout is US
+ * Implement Pairing mechanism inside the Android app, right now pairing must be doen using Android native Bluetooth interface
+ * Implement Gamepad Support in Server
+ * Create Gamepad in Android
+
