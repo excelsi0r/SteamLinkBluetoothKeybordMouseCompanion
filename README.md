@@ -5,6 +5,8 @@ The app was originally planned and developed for Bluetooth, given that it is sup
 
 Although it was planned for SteamLink the author also found feasible to port the same app for other SBC's. In this case a tutorial for Raspbian for Raspberry Pi was also created.
 
+In theory, this App works for any Linux Distribution, as long as Bluetooth is supported. But the setup script for each distribution must be created.
+
 ## Introduction
 The objective of this project is to create a support keyboard, mouse and gamepad to help with steamk link user interaction. The app is to be developed to android in a first initial release and the communication is featured via bluetooth. No need to buy additional mouse, keyboard or second gamepad. No need to always move the peripherals arround. The bluetooth data transfer was chosen because the steam link supports bluetooth. Given that, in some conditions useres might not have wireless connection due to distance reasons. However, bluetooth will always be close to the players becuase a proper close quarters interactions is needed with steam link.
 
@@ -73,6 +75,7 @@ Right now:
  * Implement Pairing mechanism inside the Android app, right now pairing must be doen using Android native Bluetooth interface
  * Implement Gamepad Support in Server
  * Create Gamepad in Android
+ * Scripts for other Linux Distributions
  
  Don't forget to check out the [Wiki](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/wiki) containing usefull information, such as [Architecture](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/wiki/Architecture), [Research](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/wiki/Research) and [References](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/wiki/References)
 
