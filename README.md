@@ -47,7 +47,7 @@ Open android app, press Connect and select the steamlink in the list of paired d
 ### Raspbian
 #### Requirments:
  * Raspbian Device (Raspberry Pi)
- * MacOs, Linux Machine or Windows with Linux terminal (exapmle: windows 10 with ubuntu from Store)
+ * MacOs, Linux Machine or Windows with Linux terminal (example: windows 10 with ubuntu from Store)
 
 #### 1st Step: Pair with Raspberry
 Raspbian provides a easy user interaction in order to pair devices. The first thing you should do is pair Raspbian with your device. If you are unfamiliar just search in Google and tons of tutorials will show up.
