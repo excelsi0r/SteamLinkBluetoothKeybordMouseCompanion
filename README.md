@@ -31,7 +31,7 @@ Now, boot up SteamLink and retrieve the `IP Address` by going down to Settings->
 Write down the IP Adress, we will need it for the next Step.
 
 #### 2nd Step: Pair SteamLink with your android device
-First, Download the Client App from the Play Store, [SteamLink Keyboard Mouse Companion](), open and notice the underlined number by the format `XX:XX:XX:XX:XX:XX` that is your device MAC Address, note it down we are gonna need that later.
+First, Download the Client App from the Play Store, [SteamLink Keyboard Mouse Companion](https://play.google.com/store/apps/details?id=nuno.steamlinkcontroller), open and notice the underlined number by the format `XX:XX:XX:XX:XX:XX` that is your device MAC Address, note it down we are gonna need that later.
 
 Since SteamLink does not provide a proper UI for the users to pair devices, we have to pair via terminal.
 Open a SSH connection from termianl `ssh root@<STEAMLINK_IP_ADDRESS>`. Don't forget to change <STEAMLINK_IP_ADDRESS> for the real address that you retrieved last step.
@@ -63,7 +63,8 @@ I will assume you are inside Raspbian terminal. So, just run the script `sudo ./
 Oncd it finishes, reboot Raspbian.
 
 #### 3rd: Run Android App
-Open android app, press Connect and select the rasperrypi in the list of paired devices.
+Download the Client App from the Play Store, [SteamLink Keyboard Mouse Companion](https://play.google.com/store/apps/details?id=nuno.steamlinkcontroller)
+Open the app, press Connect and select the rasperrypi in the list of paired devices.
 
 ## Ubuntu
  * Ubuntu Machine
@@ -79,8 +80,8 @@ I will assume you are inside Ubuntu terminal. So, just run the script `sudo ./se
 Oncd it finishes, reboot Ubuntu.
 
 #### 3rd: Run Android App
-Open android app, press Connect and select the ubuntu machine in the list of paired devices.
-
+Download the Client App from the Play Store, [SteamLink Keyboard Mouse Companion](https://play.google.com/store/apps/details?id=nuno.steamlinkcontroller)
+Open the app, press Connect and select the ubuntu machine in the list of paired devices.
 
 ## Contribute
 If you wish to contribute there is pleanty of work to be done. You can view the Future section in the [Dashboard](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/projects/1) for contributions.
