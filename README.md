@@ -11,7 +11,7 @@ This project works also for other linux based distributions, as long as they sup
 In the following chapter I will show how to install in SteamLink and Ubuntu.
 
 ### SteamLink
-####Requirments:
+#### Requirments:
  * SteamLink Device
  * MacOs, Linux Machine or Windows with Linux terminal (exapmle: windows 10 with ubuntu from Store)
  
