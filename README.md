@@ -1,7 +1,9 @@
 # Steam Link Bluetooth Keyboard and Mouse Companion
-Steam link Bluetooth Keyboard and Mouse Companion. Support for keyboard mouse.
+This Application aims to deliver a Mouse and Keyboard interface for some SBC, Single Board Computers, devices. It was first planned to work with SteamLink, given that it requires external peripherals to interact with and it might be annoying. For example tiping in chat with only a gamepad might be very frustrating. So, in order to prevent the user from being constantly plugging and unplugging mouse and keyboard, this project was created. This way, at any time, the user can simply open the app in the smartphone and connect to the SteamLink. A virtual mouse and keyboard will pop up on the screen and the user can interact easily. 
 
-Wireless support is currently in development.
+The app was originally planned and developed for Bluetooth, given that it is supported 100% of the time as the user is always close enough to interact via Bluetooth. Wireless is currently being worked on but it was not first planned because some users do not have Wireless support near the SteamLink. 
+
+Although it was planned for SteamLink the author also found feasible to port the same app for other SBC's. In this case a tutorial for Raspbian for Raspberry Pi was also created.
 
 ## Introduction
 The objective of this project is to create a support keyboard, mouse and gamepad to help with steamk link user interaction. The app is to be developed to android in a first initial release and the communication is featured via bluetooth. No need to buy additional mouse, keyboard or second gamepad. No need to always move the peripherals arround. The bluetooth data transfer was chosen because the steam link supports bluetooth. Given that, in some conditions useres might not have wireless connection due to distance reasons. However, bluetooth will always be close to the players becuase a proper close quarters interactions is needed with steam link.
