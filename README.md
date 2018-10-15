@@ -11,7 +11,7 @@ This project works also for other linux based distributions, as long as they sup
 In the following chapter I will show how to install in SteamLink and Ubuntu.
 
 ### SteamLink
-Requirments:
+####Requirments:
  * SteamLink Device
  * MacOs, Linux Machine or Windows with Linux terminal (exapmle: windows 10 with ubuntu from Store)
  
@@ -41,5 +41,23 @@ Run the script with your steamlink IP Address. Ex: `./setup-steamlink.sh 192.168
 
 After the script finishes running, power cycle the SteamLink, unplug from electricity and plug again.
 
+#### 4th Step: Run Android App
+Open android app, press Connect and select the steamlink in the list of paired devices.
+
 ### Raspbian
-TODO
+#### Requirments:
+ * Raspbian Device (Raspberry Pi)
+ * MacOs, Linux Machine or Windows with Linux terminal (exapmle: windows 10 with ubuntu from Store)
+
+#### 1st Step: Pair with Raspberry
+Raspbian provides a easy user interaction in order to pair devices. The first thing you should do is pair Raspbian with your device. If you are unfamiliar just search in Google and tons of tutorials will show up.
+
+#### 2nd Step: Run Script
+Run the Provided script in order to install the daemon server in Raspbian. [SteamLink Setup Script](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.2-beta/setup-raspbian.sh)
+
+I will assume you are inside Raspbian terminal. So, just run the script `sudo ./setup-rapbian.sh`
+
+Oncd it finishes, reboot Raspbian.
+
+#### 3rd: Run Android App
+Open android app, press Connect and select the rasperrypi in the list of paired devices.
