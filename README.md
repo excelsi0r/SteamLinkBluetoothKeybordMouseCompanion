@@ -13,7 +13,7 @@ In the following chapter I will show how to install in SteamLink and Ubuntu.
 ### SteamLink
 Requirments:
  * SteamLink Device
- * MacOs, Linux Machine or Windows with Linux terminal (exapmle: windows 10 with ubuntu from Store)
+ * MacOs, Linux Machine or Windows with Linux terminal (example: windows 10 with ubuntu from Store)
  
 #### 1st Step: Enable Steamlink SSH and retrieve IP address
 The SteamLinkSDK repository explains very well how to enable ssh under SteamLink. 
