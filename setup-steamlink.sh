@@ -5,7 +5,7 @@ then
 	sudo apt update &&
 	sudo apt install sshpass -y &&
 
-	wget https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.1-beta/bluetoothcontroller.o -O bluetoothcontroller.o &&
+	wget https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.2-beta/bluetoothcontroller.o -O bluetoothcontroller.o &&
 	sshpass -p 'steamlink123' scp bluetoothcontroller.o root@$1:/home/steam/bin/bluetoothcontroller.o &&
 	rm bluetoothcontroller.o &&
 
