@@ -286,11 +286,18 @@
             android:text="Ctrl"
             android:textSize="14sp" />
 
+        <Button
+            android:id="@+id/windowsButonnStr"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="Win" />
+
         <ImageButton
             android:id="@+id/windowsButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="0"
             app:srcCompat="@drawable/ic_windows" />
 
         <Button

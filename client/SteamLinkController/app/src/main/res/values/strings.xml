@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SteamLinkController</string>
+    <string name="app_name">Steam Link Companion</string>
     <string name="connectButton">Connect</string>
     <string name="editButton">Edit</string>
     <string name="exitButton">Exit</string>

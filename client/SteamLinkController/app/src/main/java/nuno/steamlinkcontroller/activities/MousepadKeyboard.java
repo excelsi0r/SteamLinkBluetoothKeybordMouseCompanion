@@ -141,6 +141,7 @@ public class MousepadKeyboard extends AppCompatActivity
         final Button insButton = findViewById(R.id.insButton);
         final Button ctrlButton = findViewById(R.id.ctrlButton);
         final ImageButton winButton = findViewById(R.id.windowsButton);
+        final Button winButoonStr = findViewById(R.id.windowsButonnStr);
         final Button altButton = findViewById(R.id.altButton);
         final Button shiftButton = findViewById(R.id.shiftButton);
         final Button arrowUpButton = findViewById(R.id.arrowUp);
@@ -628,6 +629,17 @@ public class MousepadKeyboard extends AppCompatActivity
         });
 
         winButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)
+                    keyWin(true);
+                else if((motionEvent.getAction() & ACTION_MASK) == ACTION_UP)
+                    keyWin(false);
+                return true;
+            }
+        });
+
+        winButoonStr.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if((motionEvent.getAction() & ACTION_MASK) == ACTION_DOWN)

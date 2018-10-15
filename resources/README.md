@@ -10,7 +10,10 @@ convert linux input-event-codes.h to xml.
 Experiments used during proof of concept phase
 
 ## Images
-Multipe images. 
+Multipe images. Icon and architecture
 
 ## Libbluetooth
 Contains the libblueooth.a package used during compilition o C server for steamlink
+
+## GimpIcon
+Contains the icon Project from Gimp
