@@ -51,8 +51,7 @@ Open android app, press Connect and select the steamlink in the list of paired d
 ## Raspbian
 #### Requirments:
  * Raspbian Device (Raspberry Pi)
- * MacOs, Linux Machine or Windows with Linux terminal (example: windows 10 with ubuntu from Store)
-
+ 
 #### 1st Step: Pair with Raspberry
 Raspbian provides a easy user interaction in order to pair devices. The first thing you should do is pair Raspbian with your device. If you are unfamiliar just search in Google and tons of tutorials will show up.
 
@@ -65,6 +64,23 @@ Oncd it finishes, reboot Raspbian.
 
 #### 3rd: Run Android App
 Open android app, press Connect and select the rasperrypi in the list of paired devices.
+
+## Ubuntu
+ * Ubuntu Machine
+ 
+#### 1st Step: Pair with Raspberry
+Ubuntu provides a easy user interaction in order to pair devices. The first thing you should do is pair Ubuntu with your device. If you are unfamiliar just search in Google and tons of tutorials will show up.
+
+#### 2nd Step: Run Script
+Run the Provided script in order to install the daemon server in Raspbian. [Ubuntu Setup Script](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.2-beta/setup-ubuntu.sh)
+
+I will assume you are inside Ubuntu terminal. So, just run the script `sudo ./setup-ubuntu.sh`
+
+Oncd it finishes, reboot Ubuntu.
+
+#### 3rd: Run Android App
+Open android app, press Connect and select the ubuntu machine in the list of paired devices.
+
 
 ## Contribute
 If you wish to contribute there is pleanty of work to be done. You can view the Future section in the [Dashboard](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/projects/1) for contributions.
