@@ -1,6 +1,6 @@
 #! /bin/bash
 
-wget https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.2-beta/bluetoothcontroller.o -O bluetoothcontroller.o &&
+wget https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.2-beta/bluetoothcontroller-x80_86.o -O bluetoothcontroller.o &&
 sudo cp bluetoothcontroller.o /usr/local/bin/bluetoothcontroller.o &&
 sudo chmod +x /usr/local/bin/bluetoothcontroller.o &&
 rm bluetoothcontroller.o &&

@@ -9,6 +9,8 @@ then
 	sshpass -p 'steamlink123' scp bluetoothcontroller.o root@$1:/home/steam/bin/bluetoothcontroller.o &&
 	rm bluetoothcontroller.o &&
 
+    sshpass -p 'steamlink123' sed -i 's/#Name = %h-%d/Name = Steam Link/g' /etc/bluetooth/main.conf
+
 	sshpass -p 'steamlink123' ssh root@$1 'echo "#!/bin/sh
 
 	#DEBUG_OPTIONS=-d
