@@ -10,7 +10,7 @@ The objective of this project is to create a support keyboard, mouse and gamepad
 This project works also for other linux based distributions, as long as they support Bluetooth.
 In the following chapter I will show how to install in SteamLink and Ubuntu.
 
-### SteamLink
+## SteamLink
 #### Requirments:
  * SteamLink Device
  * MacOs, Linux Machine or Windows with Linux terminal (example: windows 10 with ubuntu from Store)
@@ -44,7 +44,7 @@ After the script finishes running, power cycle the SteamLink, unplug from electr
 #### 4th Step: Run Android App
 Open android app, press Connect and select the steamlink in the list of paired devices.
 
-### Raspbian
+## Raspbian
 #### Requirments:
  * Raspbian Device (Raspberry Pi)
  * MacOs, Linux Machine or Windows with Linux terminal (example: windows 10 with ubuntu from Store)
@@ -53,7 +53,7 @@ Open android app, press Connect and select the steamlink in the list of paired d
 Raspbian provides a easy user interaction in order to pair devices. The first thing you should do is pair Raspbian with your device. If you are unfamiliar just search in Google and tons of tutorials will show up.
 
 #### 2nd Step: Run Script
-Run the Provided script in order to install the daemon server in Raspbian. [SteamLink Setup Script](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.2-beta/setup-raspbian.sh)
+Run the Provided script in order to install the daemon server in Raspbian. [Raspbian Setup Script](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/releases/download/v0.2-beta/setup-raspbian.sh)
 
 I will assume you are inside Raspbian terminal. So, just run the script `sudo ./setup-rapbian.sh`
 
