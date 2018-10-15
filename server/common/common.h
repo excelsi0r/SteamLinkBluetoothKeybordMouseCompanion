@@ -2,6 +2,7 @@
 #define COMMON_H
 
 #define MAX_TIMEOUT 2
+#define MAX_RETRIES 10
 
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>
@@ -16,5 +17,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <regex.h>
+#include <syslog.h>
 
 #endif

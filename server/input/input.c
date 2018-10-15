@@ -80,3 +80,22 @@ void config_virtual_driver(int fd)
 
     ioctl(fd, UI_DEV_CREATE);
 }
+
+int test_input()
+{
+    int max_retries = MAX_RETRIES;
+
+    while(max_retries > 0)
+    {
+        if( access( "/var/run/sdp", F_OK ) != -1 ) 
+            return 0;
+    
+        else 
+        {
+            max_retries--;
+            sleep(1);
+        }
+    }
+
+    return 1;
+}

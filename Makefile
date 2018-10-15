@@ -18,7 +18,7 @@ SGOBJS=$(SGDIR)signal.c
 
 OBJS=$(ROOTOBJS) $(BLOBJS) $(INOBJS) $(PTOBJS) $(SGOBJS)
 
-BIN=server.o
+BIN=bluetoothcontroller.o
 STEAMLINKBIN=bluetoothcontroller.o
 
 all: ubuntu steamlink

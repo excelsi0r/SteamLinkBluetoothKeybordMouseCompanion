@@ -6,29 +6,35 @@
 int main(int argc, char const *argv[])
 {
     //variables
-    int bt_error, in_error;
+    int bt_error, in_error, file_error;
     __sighandler_t sg_error;
     int client, pid;
 
     //get PID
     int temp_pid = getpid();
-    printf("My PID is: %d\n", temp_pid);
+    syslog(LOG_NOTICE, "My PID is: %d\n", temp_pid);
+
+    file_error = test_input();
+    if(file_error == 1)
+    {
+        syslog(LOG_NOTICE, "File /var/run/sdp not available");
+        return -1;
+    }
 
     //config bluetooth
     Bluetooth_config * bt_config = malloc(sizeof(Bluetooth_config));
     bt_error = init_bluetooth(bt_config);
     if(bt_error)
     {
-        printf("Failed to configure Bluetooth module: %d\n", bt_error);
+         syslog(LOG_NOTICE, "Failed to configure Bluetooth module: %d\n", bt_error);
         return -1;
     }
-
 
     Input_config * in_config = malloc(sizeof(Input_config));
     in_error = init_input(in_config);
     if(in_error == -1)
     {
-        printf("Failed to configure Input module: %d\n", in_error);
+        syslog(LOG_NOTICE, "Failed to configure Input module: %d\n", in_error);
         return -1;
     }
 
@@ -36,7 +42,7 @@ int main(int argc, char const *argv[])
     sg_error = init_signal();
     if(sg_error == SIG_ERR)
     {
-        printf("Failed to configure Signal module");
+        syslog(LOG_NOTICE,"Failed to configure Signal module");
         return -1;
     }
     
@@ -78,7 +84,7 @@ int main(int argc, char const *argv[])
         free(event);
         close(client);
     
-        printf("Closing Child\n");
+        syslog(LOG_NOTICE,"Closing Client\n");
 
         return 0;
     }
@@ -88,7 +94,7 @@ int main(int argc, char const *argv[])
     free(bt_config);
     free(in_config);
 
-    printf("Closing Parent\n");
+    printf("Closing Server\n");
     
     return 0;
 }
