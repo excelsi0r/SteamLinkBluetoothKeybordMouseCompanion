@@ -93,6 +93,8 @@ Right now:
  * Implement Gamepad Support in Server
  * Create Gamepad in Android
  * Scripts for other Linux Distributions
+ * Implement Application in BLE (currently using deprecated API)
+ * Implement new transmission protocol, in order to use less bytes (currently always sending and receiving 10 bytes)
  
  Don't forget to check out the [Wiki](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/wiki) containing usefull information, such as [Architecture](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/wiki/Architecture), [Research](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/wiki/Research) and [References](https://github.com/excelsi0r/SteamLinkBluetoothKeybordMouseCompanion/wiki/References)
 
